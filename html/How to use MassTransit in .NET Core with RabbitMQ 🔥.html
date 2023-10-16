@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/ -->
+<html lang="en" data-color-scheme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>How to use MassTransit in .NET Core with RabbitMQ 🔥</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <link rel="preload" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/app.min.js.download" as="script">
+    <link rel="preload" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/app.min.css" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+        <link rel="stylesheet" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/css2" as="style" onload="this.onload=null;this.rel=&#39;stylesheet&#39;" crossorigin="">
+
+        <noscript>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        </noscript>
+
+
+
+
+
+    <script async="" defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/app.min.js.download"></script>
+
+    <link rel="stylesheet" type="text/css" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/app.min.css">
+
+    <!--cssential--><style></style><!--/cssential-->
+
+    <script>
+  // Basic Config
+  let CONFIG = {
+    GHOST_URL: `https://blog.christian-schou.dk`, 
+    GHOST_KEY: `69be2bfd128a2f808a67527846`,
+    GHOST_SEARCH_IN_CONTENT: false,
+    GHOST_VERSION: 'v5.0',
+    GHOST_SEARCH_LIMIT: 8,
+    DEFAULT_COLOR_SCHEME: `System`,
+    ENABLE_FLOATING_HEADER: !!`true`,
+    ENABLE_IMAGE_LIGHTBOX: !!`true`,
+    OPEN_LINKS_IN_NEW_TAB: !!`true`,
+    ENABLE_PWA: false, /* Enable PWA - Progressive Web App */
+    DISQUS_SHORTNAME: '', /* Replace 'biron-demo' with your disqus account shortname */
+    COVE_ID: '' /* To use Cove, replace the below id with your cove publication id*/
+  }
+</script><style class="fslightbox-styles">.fslightbox-absoluted{position:absolute;top:0;left:0}.fslightbox-fade-in{animation:fslightbox-fade-in .3s cubic-bezier(0,0,.7,1)}.fslightbox-fade-out{animation:fslightbox-fade-out .3s ease}.fslightbox-fade-in-strong{animation:fslightbox-fade-in-strong .3s cubic-bezier(0,0,.7,1)}.fslightbox-fade-out-strong{animation:fslightbox-fade-out-strong .3s ease}@keyframes fslightbox-fade-in{from{opacity:.65}to{opacity:1}}@keyframes fslightbox-fade-out{from{opacity:.35}to{opacity:0}}@keyframes fslightbox-fade-in-strong{from{opacity:.3}to{opacity:1}}@keyframes fslightbox-fade-out-strong{from{opacity:1}to{opacity:0}}.fslightbox-cursor-grabbing{cursor:grabbing}.fslightbox-full-dimension{width:100%;height:100%}.fslightbox-open{overflow:hidden;height:100%}.fslightbox-flex-centered{display:flex;justify-content:center;align-items:center}.fslightbox-opacity-0{opacity:0!important}.fslightbox-opacity-1{opacity:1!important}.fslightbox-scrollbarfix{padding-right:17px}.fslightbox-transform-transition{transition:transform .3s}.fslightbox-container{font-family:Arial,sans-serif;position:fixed;top:0;left:0;background:linear-gradient(rgba(30,30,30,.9),#000 1810%);touch-action:pinch-zoom;z-index:1000000000;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}.fslightbox-container *{box-sizing:border-box}.fslightbox-svg-path{transition:fill .15s ease;fill:#ddd}.fslightbox-nav{height:45px;width:100%;position:absolute;top:0;left:0}.fslightbox-slide-number-container{display:flex;justify-content:center;align-items:center;position:relative;height:100%;font-size:15px;color:#d7d7d7;z-index:0;max-width:55px;text-align:left}.fslightbox-slide-number-container .fslightbox-flex-centered{height:100%}.fslightbox-slash{display:block;margin:0 5px;width:1px;height:12px;transform:rotate(15deg);background:#fff}.fslightbox-toolbar{position:absolute;z-index:3;right:0;top:0;height:100%;display:flex;background:rgba(35,35,35,.65)}.fslightbox-toolbar-button{height:100%;width:45px;cursor:pointer}.fslightbox-toolbar-button:hover .fslightbox-svg-path{fill:#fff}.fslightbox-slide-btn-container{display:flex;align-items:center;padding:12px 12px 12px 6px;position:absolute;top:50%;cursor:pointer;z-index:3;transform:translateY(-50%)}@media (min-width:476px){.fslightbox-slide-btn-container{padding:22px 22px 22px 6px}}@media (min-width:768px){.fslightbox-slide-btn-container{padding:30px 30px 30px 6px}}.fslightbox-slide-btn-container:hover .fslightbox-svg-path{fill:#f1f1f1}.fslightbox-slide-btn{padding:9px;font-size:26px;background:rgba(35,35,35,.65)}@media (min-width:768px){.fslightbox-slide-btn{padding:10px}}@media (min-width:1600px){.fslightbox-slide-btn{padding:11px}}.fslightbox-slide-btn-container-previous{left:0}@media (max-width:475.99px){.fslightbox-slide-btn-container-previous{padding-left:3px}}.fslightbox-slide-btn-container-next{right:0;padding-left:12px;padding-right:3px}@media (min-width:476px){.fslightbox-slide-btn-container-next{padding-left:22px}}@media (min-width:768px){.fslightbox-slide-btn-container-next{padding-left:30px}}@media (min-width:476px){.fslightbox-slide-btn-container-next{padding-right:6px}}.fslightbox-down-event-detector{position:absolute;z-index:1}.fslightbox-slide-swiping-hoverer{z-index:4}.fslightbox-invalid-file-wrapper{font-size:22px;color:#eaebeb;margin:auto}.fslightbox-video{object-fit:cover}.fslightbox-youtube-iframe{border:0}.fslightboxl{display:block;margin:auto;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:67px;height:67px}.fslightboxl div{box-sizing:border-box;display:block;position:absolute;width:54px;height:54px;margin:6px;border:5px solid;border-color:#999 transparent transparent transparent;border-radius:50%;animation:fslightboxl 1.2s cubic-bezier(.5,0,.5,1) infinite}.fslightboxl div:nth-child(1){animation-delay:-.45s}.fslightboxl div:nth-child(2){animation-delay:-.3s}.fslightboxl div:nth-child(3){animation-delay:-.15s}@keyframes fslightboxl{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.fslightbox-source{position:relative;z-index:2;opacity:0}</style>
+
+<style>
+  :root {
+    --global-theme-notifications: flex; /* flex/none */
+    --global-intro-bg: var(--color-primary); /* you can add your own color */
+    --global-theme-toggle: flex; /* flex/none */
+    --global-search: flex; /* flex/none */
+    --global-search-by-tag: flex; /* flex/none */
+    --global-max-width: 1280px; /* site max width */
+    --global-content-width: 40rem; /* post-content-width */
+    --global-radius: 5px; /* default radius */
+    --global-gallery-gap: 0.5em; /* Image gallery distance between images */
+    --global-hyphens: none; /* none/auto */
+    --global-header-position: sticky; /* relative/sticky */
+    --global-header-height: 80px;
+    --global-progress-bar: visible; /* visible/hidden */
+    --global-scroll-top: hidden; /* visible/hidden */
+    --global-content-preview-fading: 0%; /* 80%-100% for fading effect */
+    --global-announcement-height: 60px;
+    --color-secondary: #e052a5;
+  }
+</style>
+
+    <script>
+  // Dark/Light Theme Handling
+  let preferredTheme; 
+  if (CONFIG.DEFAULT_COLOR_SCHEME.toLowerCase() === 'system') {
+    const preferredColorScheme = 
+    ( window.matchMedia 
+      && window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) 
+    ? 'dark' 
+    : 'light'
+    preferredTheme = localStorage.getItem('USER_COLOR_SCHEME') || preferredColorScheme;
+  } else {
+    preferredTheme = localStorage.getItem('USER_COLOR_SCHEME') || CONFIG.DEFAULT_COLOR_SCHEME.toLowerCase();
+  }
+  document.documentElement.setAttribute('data-color-scheme', preferredTheme);
+
+  // Newsletter overlay
+  let userIntroPreference = localStorage.getItem('USER_INTRO');
+  if (userIntroPreference) {
+    document.documentElement.setAttribute('data-intro', userIntroPreference);
+  }
+  
+  // Global values needed
+  let GLOBAL = {
+    CURRENT_PAGE: parseInt(''),
+    NEXT_PAGE: parseInt(''),
+    NEXT_PAGE_LINK: '',
+    MAX_PAGES: parseInt(''), 
+    LAST_PAGE: `` === `` ? true : false,
+    POSTS_PER_PAGE: parseInt('12'),
+    SCROLL_POS: 0
+  }
+</script>    
+
+    <meta name="description" content="Learn how to implement MassTransit with RabbitMQ in .NET Core. this tutorial will teach how to work with queues and exchanges in RabbitMQ. 👨‍💻">
+    <link rel="icon" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/cropped-cs-logo-color-retina.png" type="image/png">
+    <link rel="canonical" href="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="amphtml" href="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/amp/">
+    
+    <meta property="og:site_name" content="Tech with Christian">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to use MassTransit in .NET Core with RabbitMQ 🔥">
+    <meta property="og:description" content="Learn how to implement MassTransit with RabbitMQ in .NET Core. this tutorial will teach how to work with queues and exchanges in RabbitMQ. 👨‍💻">
+    <meta property="og:url" content="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/">
+    <meta property="og:image" content="https://blog.christian-schou.dk/content/images/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp">
+    <meta property="article:published_time" content="2023-03-22T00:46:56.000Z">
+    <meta property="article:modified_time" content="2023-04-05T09:31:20.000Z">
+    <meta property="article:tag" content=".NET">
+    <meta property="article:tag" content="AutoMapper">
+    <meta property="article:tag" content="Mediator">
+    <meta property="article:tag" content="REST">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/christan.schou">
+    <meta property="article:author" content="https://www.facebook.com/christan.schou">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to use MassTransit in .NET Core with RabbitMQ 🔥">
+    <meta name="twitter:description" content="Learn how to implement MassTransit with RabbitMQ in .NET Core. this tutorial will teach how to work with queues and exchanges in RabbitMQ. 👨‍💻">
+    <meta name="twitter:url" content="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/">
+    <meta name="twitter:image" content="https://blog.christian-schou.dk/content/images/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Christian Schou">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content=".NET, AutoMapper, Mediator, REST">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="1080">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Tech with Christian",
+        "url": "https://blog.christian-schou.dk/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://blog.christian-schou.dk/content/images/2023/04/logo-colorful-christian-schou-v3.webp"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Christian Schou",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://blog.christian-schou.dk/content/images/2023/06/christian-schou-optimized.jpeg",
+            "width": 800,
+            "height": 800
+        },
+        "url": "https://blog.christian-schou.dk/author/christian/",
+        "sameAs": [
+            "https://christian-schou.dk/",
+            "https://www.facebook.com/christan.schou"
+        ]
+    },
+    "headline": "How to use MassTransit in .NET Core with RabbitMQ 🔥",
+    "url": "https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/",
+    "datePublished": "2023-03-22T00:46:56.000Z",
+    "dateModified": "2023-04-05T09:31:20.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://blog.christian-schou.dk/content/images/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp",
+        "width": 1920,
+        "height": 1080
+    },
+    "keywords": ".NET, AutoMapper, Mediator, REST",
+    "description": "MassTransit... Are you looking for an open-source distributed application framework for .NET that simplifies the development of message-based applications? MassTransit provides a simple, yet powerful, way to build distributed systems using message-based architectures such as event-driven, publish/subscribe, and request/response patterns. Sounds awesome right? 👌\n\nIn this tutorial, I will show you how to use MassTransit with .NET in an ASP.NET Core Web API. The Web API will be based on a free tem",
+    "mainEntityOfPage": "https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.68">
+    <link rel="alternate" type="application/rss+xml" title="Tech with Christian" href="https://blog.christian-schou.dk/rss/">
+    <script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/portal.min.js.download" data-i18n="false" data-ghost="https://blog.christian-schou.dk/" data-key="d0c7ceec837325c2faeb16664b" data-api="https://blog.christian-schou.dk/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style><script async="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/saved_resource"></script>
+    <script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/sodo-search.min.js.download" data-key="d0c7ceec837325c2faeb16664b" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="https://blog.christian-schou.dk/" crossorigin="anonymous"></script>
+    
+    <link href="https://blog.christian-schou.dk/webmentions/receive/" rel="webmention">
+    <script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/cards.min.js.download"></script>
+    <link rel="stylesheet" type="text/css" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/cards.min.css">
+    <script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/comment-counts.min.js.download" data-ghost-comments-counts-api="https://blog.christian-schou.dk/members/api/comments/counts/"></script>
+    <script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/member-attribution.min.js.download"></script>
+    <script async="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/script.js.download" data-website-id="a3d3ec03-6dbf-4c69-8de0-1b0a832e8150"></script>
+<link rel="stylesheet" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/prism-v1.css">
+<style> body { --global-content-preview-fading: 300px; }</style>
+
+
+<style>
+    code[class*=language-], pre[class*=language-] {
+        font-size: 16px !important;
+    }
+</style>
+
+<style>
+    pre[class*="language-"],
+code[class*="language-"] {
+	color: #d4d4d4;
+	font-size: 13px;
+	text-shadow: none;
+	font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", "Courier New", monospace;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	line-height: 1.5;
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre[class*="language-"]::selection,
+code[class*="language-"]::selection,
+pre[class*="language-"] *::selection,
+code[class*="language-"] *::selection {
+	text-shadow: none;
+	background: #264F78;
+}
+
+@media print {
+	pre[class*="language-"],
+	code[class*="language-"] {
+		text-shadow: none;
+	}
+}
+
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	background: #1e1e1e;
+}
+
+:not(pre) > code[class*="language-"] {
+	padding: .1em .3em;
+	border-radius: .3em;
+	color: #db4c69;
+	background: #1e1e1e;
+}
+/*********************************************************
+* Tokens
+*/
+.namespace {
+	opacity: .9;
+}
+
+.token.doctype .token.doctype-tag {
+	color: #569CD6;
+}
+
+.token.doctype .token.name {
+	color: #9cdcfe;
+}
+
+.token.comment,
+.token.prolog {
+	color: #6a9955;
+}
+
+.token.punctuation,
+.language-html .language-css .token.punctuation,
+.language-html .language-javascript .token.punctuation {
+	color: #d4d4d4;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.inserted,
+.token.unit {
+	color: #b5cea8;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.deleted {
+	color: #ce9178;
+}
+
+.language-css .token.string.url {
+	text-decoration: underline;
+}
+
+.token.operator,
+.token.entity {
+	color: #d4d4d4;
+}
+
+.token.operator.arrow {
+	color: #569CD6;
+}
+
+.token.atrule {
+	color: #ce9178;
+}
+
+.token.atrule .token.rule {
+	color: #c586c0;
+}
+
+.token.atrule .token.url {
+	color: #9cdcfe;
+}
+
+.token.atrule .token.url .token.function {
+	color: #dcdcaa;
+}
+
+.token.atrule .token.url .token.punctuation {
+	color: #d4d4d4;
+}
+
+.token.keyword {
+	color: #569CD6;
+}
+
+.token.keyword.module,
+.token.keyword.control-flow {
+	color: #c586c0;
+}
+
+.token.function,
+.token.function .token.maybe-class-name {
+	color: #dcdcaa;
+}
+
+.token.regex {
+	color: #d16969;
+}
+
+.token.important {
+	color: #569cd6;
+}
+
+.token.italic {
+	font-style: italic;
+}
+
+.token.constant {
+	color: #9cdcfe;
+}
+
+.token.class-name,
+.token.maybe-class-name {
+	color: #4ec9b0;
+}
+
+.token.console {
+	color: #9cdcfe;
+}
+
+.token.parameter {
+	color: #9cdcfe;
+}
+
+.token.interpolation {
+	color: #9cdcfe;
+}
+
+.token.punctuation.interpolation-punctuation {
+	color: #569cd6;
+}
+
+.token.boolean {
+	color: #569cd6;
+}
+
+.token.property,
+.token.variable,
+.token.imports .token.maybe-class-name,
+.token.exports .token.maybe-class-name {
+	color: #9cdcfe;
+}
+
+.token.selector {
+	color: #d7ba7d;
+}
+
+.token.escape {
+	color: #d7ba7d;
+}
+
+.token.tag {
+	color: #569cd6;
+}
+
+.token.tag .token.punctuation {
+	color: #808080;
+}
+
+.token.cdata {
+	color: #808080;
+}
+
+.token.attr-name {
+	color: #9cdcfe;
+}
+
+.token.attr-value,
+.token.attr-value .token.punctuation {
+	color: #ce9178;
+}
+
+.token.attr-value .token.punctuation.attr-equals {
+	color: #d4d4d4;
+}
+
+.token.entity {
+	color: #569cd6;
+}
+
+.token.namespace {
+	color: #FFFFFF;
+}
+/*********************************************************
+* Language Specific
+*/
+
+pre[class*="language-javascript"],
+code[class*="language-javascript"],
+pre[class*="language-jsx"],
+code[class*="language-jsx"],
+pre[class*="language-typescript"],
+code[class*="language-typescript"],
+pre[class*="language-tsx"],
+code[class*="language-tsx"] {
+	color: #9cdcfe;
+}
+
+pre[class*="language-css"],
+code[class*="language-css"] {
+	color: #ce9178;
+}
+
+pre[class*="language-html"],
+code[class*="language-html"] {
+	color: #d4d4d4;
+}
+
+.language-regex .token.anchor {
+	color: #dcdcaa;
+}
+
+.language-html .token.punctuation {
+	color: #808080;
+}
+/*********************************************************
+* Line highlighting
+*/
+pre[class*="language-"] > code[class*="language-"] {
+	position: relative;
+	z-index: 1;
+}
+
+.line-highlight.line-highlight {
+	background: #404040;
+	box-shadow: inset 5px 0 0 #404040;
+	z-index: 0;
+}
+    
+content-preview {
+    position: relative;
+}
+.content-preview::after {
+    content: "";
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(180deg,transparent 0,var(--c-body-bg) 100%);
+    position: absolute;
+    bottom: 0;
+}
+</style>
+
+<!-- Pixel Code for https://proofbump.com/
+<script defer src="https://proofbump.com/pixel/udi5m4b6bfiwgrluipcrkdoeygsnh1kz"></script>
+ END Pixel Code --><style>:root {--ghost-accent-color: #f05942;}</style>
+  <style>.gh-portal-account-header{display:flex;flex-direction:column;align-items:center;margin:0 0 32px}.gh-portal-account-header .gh-portal-avatar{margin:6px 0 8px!important}.gh-portal-account-data{margin-bottom:40px}footer.gh-portal-account-footer{display:flex}.gh-portal-account-footer.paid{margin-top:12px}.gh-portal-account-footermenu{display:flex;align-items:center;list-style:none;padding:0;margin:0}.gh-portal-account-footerright{display:flex;flex-grow:1;align-items:center;justify-content:flex-end}.gh-portal-account-footermenu li{margin-right:16px}.gh-portal-account-footermenu li:last-of-type{margin-right:0}.gh-portal-freeaccount-newsletter{display:flex;align-items:center;justify-content:space-between;margin-top:24px}.gh-portal-freeaccount-newsletter .label{display:flex;flex-direction:column;flex-grow:1}.gh-portal-free-ctatext{margin-top:-12px}.gh-portal-cancelcontinue-container{margin:24px 0 32px}.gh-portal-list-detail .gh-portal-email-notice{display:flex;align-items:center;gap:5px;margin-top:6px;color:var(--red);font-weight:500;font-size:1.25rem;letter-spacing:.2px}.gh-portal-email-notice-icon{width:20px;height:20px}.gh-portal-billing-button-loader{width:32px;height:32px;margin-right:-3px;opacity:.6}.gh-portal-product-icon{width:52px;margin-right:12px;border-radius:2px}.gh-portal-account-discountcontainer{position:relative;display:flex;align-items:center}.gh-portal-account-old-price{text-decoration:line-through;color:var(--grey9)!important}.gh-portal-account-tagicon{width:16px;height:16px;color:var(--brandcolor);margin-right:5px;z-index:999}@media (max-width: 390px){.gh-portal-account-footer{padding:0!important}}@media (max-width: 340px){.gh-portal-account-footer{padding:0!important;flex-wrap:wrap;gap:12px}.gh-portal-account-footer .gh-portal-account-footerright{justify-content:flex-start}}.gh-email-suppressed-page-title{margin-bottom:14px}.gh-email-suppressed-page-icon{display:block;width:38px;height:38px;margin:0 auto 18px}.gh-email-suppressed-page-text{padding:0 14px;text-align:center;color:var(--grey6)}.gh-email-faq-footer-text{color:var(--grey8)}.gh-portal-list-detail.email-newsletter .gh-email-faq-page-button{display:block;margin-top:3px}.accountEmail .gh-email-faq-page-button{margin-left:4px}.emailReceivingFAQ .gh-portal-btn-back,.emailReceivingFAQ .gh-portal-btn-back:hover{left:calc(6vmin - 14px)}.emailReceivingFAQ .gh-portal-closeicon-container{right:calc(6vmin - 20px)}@media (max-width: 480px){.emailReceivingFAQ .gh-portal-btn-back,.emailReceivingFAQ .gh-portal-btn-back:hover{left:16px}.emailReceivingFAQ .gh-portal-closeicon-container{right:24px}}.gh-email-faq-page-button{color:var(--brandcolor);cursor:pointer;background:none;transition:color linear .1s;font-size:1.45rem}</style><style>.App{text-align:center}.App-logo{height:40vmin;pointer-events:none}@media (prefers-reduced-motion: no-preference){.App-logo{animation:App-logo-spin infinite 20s linear}}.App-header{background-color:#282c34;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:calc(10px + 2vmin);color:#fff}.App-link{color:#61dafb}@keyframes App-logo-spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style><style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style><style data-tiptap-style="">.ProseMirror {
+  position: relative;
+}
+
+.ProseMirror {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
+  -webkit-font-variant-ligatures: none;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+}
+
+.ProseMirror [contenteditable="false"] {
+  white-space: normal;
+}
+
+.ProseMirror [contenteditable="false"] [contenteditable="true"] {
+  white-space: pre-wrap;
+}
+
+.ProseMirror pre {
+  white-space: pre-wrap;
+}
+
+img.ProseMirror-separator {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  margin: 0;
+}
+
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid black;
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection *::-moz-selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection * {
+  caret-color: transparent;
+}
+
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+
+.tippy-box[data-animation=fade][data-state=hidden] {
+  opacity: 0
+}</style></head>
+  <body class="post-template tag-net tag-automapper tag-mediator tag-rest line-numbers">
+        
+    <div class="progress-bar" style="--scroll: 0%;"></div>
+    
+    <header class="header js-header is-floating is-not-bottom is-pinned is-top">
+  <div class="container wrapper w-100">
+    <div class="row">
+      <div class="col-xs col-lg-8 header__left flex items-center">
+<a class="header__brand" href="https://blog.christian-schou.dk/">            <img class="header__logo" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/logo-colorful-christian-schou-v3.webp" alt="Tech with Christian">
+</a>        
+        <nav class="header__menu items-center">
+          <ul class="nav">
+    <li class="nav-home"><a href="https://blog.christian-schou.dk/">Home 🏠</a></li>
+    <li class="nav-c"><a href="https://blog.christian-schou.dk/tag/csharp/">C# ⌨️</a></li>
+    <li class="nav-net"><a href="https://blog.christian-schou.dk/tag/net/">.NET 🌐</a></li>
+    <li class="nav-chatgpt"><a href="https://blog.christian-schou.dk/tag/chatgpt/">ChatGPT 🤖</a></li>
+    <li class="nav-docker"><a href="https://blog.christian-schou.dk/tag/docker/">Docker 🐋</a></li>
+    <li class="nav-python"><a href="https://blog.christian-schou.dk/tag/python/">Python 🐍</a></li>
+</ul>
+
+            <button class="header__dropdown--toggle flex flex-cc js-dropdown-menu-toggle" type="button" title="More" aria-label="More">
+              <i class="icon icon-dots icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#dots"></use>
+  </svg>
+</i>            </button>
+            <div class="header__dropdown js-dropdown">
+              <ul class="nav secondary">
+    <li class="nav-account"><a href="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/#/portal/">Account</a></li>
+    <li class="nav-about"><a href="https://blog.christian-schou.dk/about/">About</a></li>
+    <li class="nav-status"><a href="https://status.christian-schou.dk/status/twc">Status</a></li>
+</ul>
+            </div>
+        </nav>
+      </div>
+
+      <div class="col-xs col-lg-4 header__right items-center content-end">
+        <button class="header__theme--toggle btn-theme-toggle js-theme-toggle" title="Theme Toggle" aria-label="Theme Toggle" type="button">
+          <i class="icon icon-brightness-up icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#brightness-up"></use>
+  </svg>
+</i>          <i class="icon icon-brightness-down icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#brightness-down"></use>
+  </svg>
+</i>        </button>
+
+
+        <button class="header__search--toggle flex-cc" data-ghost-search="" type="button" title="Search" aria-label="Search">
+          <i class="icon icon-search icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#search"></use>
+  </svg>
+</i>        </button>
+
+            <a href="https://blog.christian-schou.dk/account/" class="upgrade-link">Upgrade</a>
+
+        <button class="header__menu--toggle flex-cc js-menu-toggle" type="button" title="Menu" aria-label="Menu">
+          <i class="icon icon-menu icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#menu"></use>
+  </svg>
+</i>          <i class="icon icon-x icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#x"></use>
+  </svg>
+</i>        </button>
+
+        <button class="header__user--toggle flex-cc js-member-btn is-member" title="" aria-label="">
+            <img class="header__user-avatar" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/13e103998339005f47fc0ee0e46acc3b.jpeg" alt="Vibs">
+          <i class="icon icon-user icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#user"></use>
+  </svg>
+</i>        </button>
+        <div class="user-menu js-user-menu">
+    <div class="member-user">
+      <div class="member-info flex flex-col">
+        <div class="member-name">Vibs</div>
+        <span class="member-email">vibs2006@gmail.com</span>
+      </div>
+    </div>
+    
+<a class="upgrade-link" href="https://blog.christian-schou.dk/membership/">        <i class="icon icon-trending-up icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#trending-up"></use>
+  </svg>
+</i>Upgrade
+</a>
+    <a href="https://blog.christian-schou.dk/account/" class="account-link">
+      <i class="icon icon-user icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#user"></use>
+  </svg>
+</i>Account
+    </a>
+
+<a class="signout-link" href="javascript:" data-members-signout="">      <i class="icon icon-logout icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#logout"></use>
+  </svg>
+</i>Sign out
+</a>
+  <button class="btn--toggle btn-theme-toggle js-theme-toggle" title="Theme Toggle" aria-label="Theme Toggle">
+    <i class="icon icon-brightness-up icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#brightness-up"></use>
+  </svg>
+</i>    <i class="icon icon-brightness-down icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#brightness-down"></use>
+  </svg>
+</i>    <span>Theme</span>
+  </button>
+</div>      </div>
+    </div>
+  </div>
+</header>
+    <nav class="menu js-menu">
+  <ul class="nav">
+    <li class="nav-home"><a href="https://blog.christian-schou.dk/">Home 🏠</a></li>
+    <li class="nav-c"><a href="https://blog.christian-schou.dk/tag/csharp/">C# ⌨️</a></li>
+    <li class="nav-net"><a href="https://blog.christian-schou.dk/tag/net/">.NET 🌐</a></li>
+    <li class="nav-chatgpt"><a href="https://blog.christian-schou.dk/tag/chatgpt/">ChatGPT 🤖</a></li>
+    <li class="nav-docker"><a href="https://blog.christian-schou.dk/tag/docker/">Docker 🐋</a></li>
+    <li class="nav-python"><a href="https://blog.christian-schou.dk/tag/python/">Python 🐍</a></li>
+</ul>
+
+    <ul class="nav secondary">
+    <li class="nav-account"><a href="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/#/portal/">Account</a></li>
+    <li class="nav-about"><a href="https://blog.christian-schou.dk/about/">About</a></li>
+    <li class="nav-status"><a href="https://status.christian-schou.dk/status/twc">Status</a></li>
+</ul>
+</nav>
+    <div class="search js-search">
+  <div class="search__hdr">
+    <form action="https://blog.christian-schou.dk/" method="get" class="search__form items-center bg-acc-2 js-search-form">
+      <input type="text" id="ghost-search-field" class="search__input" aria-label="Search" title="Search" placeholder="Search" autocomplete="off" required="">
+      <div class="search__icon">
+        <i class="icon icon-search icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#search"></use>
+  </svg>
+</i>      </div>
+    </form>
+    <button class="search--close bg-acc-2 js-search-close" title="Close" aria-label="Close">
+        <i class="icon icon-x icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#x"></use>
+  </svg>
+</i>    </button>
+    <div class="search__info">
+      <span class="js-search-info">Please enter at least 3 characters</span>
+      <span class="js-search-number m-r-xs fw-700 color-primary is-hidden">0</span><span class="js-search-notify is-hidden fw-600">results found</span>
+    </div>
+  </div>
+  <div class="search-helper">
+        <button class="search__tag m-r-sm m-b-sm js-search-tag" aria-label=".NET" style="--color-accent:#5B2992">.NET</button>
+        <button class="search__tag m-r-sm m-b-sm js-search-tag" aria-label="C#" style="--color-accent:#953DAB">C#</button>
+        <button class="search__tag m-r-sm m-b-sm js-search-tag" aria-label="Docker" style="--color-accent:#2396EC">Docker</button>
+        <button class="search__tag m-r-sm m-b-sm js-search-tag" aria-label="Learn to code" style="--color-accent:#90d373">Learn to code</button>
+        <button class="search__tag m-r-sm m-b-sm js-search-tag" aria-label="API" style="--color-accent:#3C6997">API</button>
+  </div>
+  <div class="search-content">
+    <div class="search-result js-search-results" id="ghost-search-results"></div>
+  </div>
+</div>
+
+    <main class="container wrapper main">
+      
+    <div class="hero is-featured p-t-lg border-top-1" style="--color-accent: #5B2992">
+    <div class="hero__content flex flex-col flex-cc m-b">
+        <div class="hero__info flex flex-cc text-acc-3 fw-500 m-b">
+          <span>Mar 22, 2023</span>
+          <span class="m-l-sm m-r-sm separator-dot">•</span>
+          <span>22 min read</span>
+            <span class="featured m-l-sm"><i class="icon icon-star icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#star"></use>
+  </svg>
+</i></span>
+        </div>
+
+      <h1 class="hero__title text-center">How to use MassTransit in .NET Core with RabbitMQ</h1>
+
+
+        <div class="hero__details flex text-acc-3"> 
+<a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">                  <img class="lazyautosizes ls-is-cached lazyloaded" data-sizes="auto" data-src="/content/images/size/w100/2023/06/christian-schou-optimized.jpeg" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/christian-schou-optimized.jpeg" alt="Christian Schou" sizes="167px">
+                <span class="fw-600">Christian Schou</span>
+</a>        </div>
+
+    </div>
+
+      <div class="hero__media wide">
+        <figure class="hero__figure">
+          <img class="hero__img lazyautosizes ls-is-cached lazyloaded" data-srcset="/content/images/size/w300/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 300w,
+                    /content/images/size/w600/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 600w,
+                    /content/images/size/w1000/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 1000w,
+                    /content/images/size/w2000/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 2000w" srcset="/content/images/size/w300/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 300w,
+                    /content/images/size/w600/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 600w,
+                    /content/images/size/w1000/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 1000w,
+                    /content/images/size/w2000/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp 2000w" data-sizes="auto" data-src="/content/images/size/w300/2023/03/masstransit-crud-api-demo-tech-with-christian_1.webp" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/masstransit-crud-api-demo-tech-with-christian_1.webp" alt="masstransit with rabbitmq, masstransit, rabbitmq, masstransit .n" sizes="960px">
+            <figcaption>MassTransit Demo with RabbitMQ</figcaption>
+        </figure>
+      </div>
+  </div>
+
+  <article class="post tag-net tag-automapper tag-mediator tag-rest featured content-wrap post-access-members">
+
+    <div class="content">      
+      <p>MassTransit... Are you looking for an open-source distributed application framework for .NET that simplifies the development of message-based applications? MassTransit provides a simple, yet powerful, way to build distributed systems using message-based architectures such as event-driven, publish/subscribe, and request/response patterns. Sounds awesome right? 👌</p><p>In this tutorial, I will show you how to use MassTransit with .NET in an ASP.NET Core Web API. The Web API will be based on a free template I have prepared for you. The link will be shown below in the requirements. You are also more than welcome to follow along with your own project. 😊</p><p>By the end of this tutorial about <a href="https://masstransit.io/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">MassTransit</a>, you can set up and configure a producer and consumer message service for <a href="https://www.rabbitmq.com/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">RabbitMQ</a>. We are also going to have a look at some advanced use cases for RabbitMQ and cover some concepts that are crucial to working with distributed solutions. If you are ready, then let's get started. 😀</p><h2 id="requirements-%F0%9F%91%A8%E2%80%8D%F0%9F%94%A7">Requirements 👨‍🔧</h2><p>Before you move on to the fun part, please read the list below of what you need to continue/follow along.</p><ul><li><a href="https://code.visualstudio.com/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">Visual Studio Code</a>, <a href="https://visualstudio.microsoft.com/vs/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">Visual Studio IDE</a>, or any other C# text editor.</li><li>Knowledge about C# and the .NET Framework.</li><li>Knowledge about RabbitMQ.</li><li>A project to implement the producer and consumer in. See the link below to my <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">CRUD</a> API template. It's available for free, and you are welcome to grab a copy. ✌️</li><li><a href="https://docs.docker.com/get-docker/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">Docker</a> (to host and run RabbitMQ)</li></ul><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://github.com/Tech-With-Christian/Dotnet-CRUD-Api?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">GitHub - Tech-With-Christian/Dotnet-CRUD-Api: This is a simple Demo CRUD API for use in my tutorials. It contains a simple implementation of a CRUD service for products.</div><div class="kg-bookmark-description">This is a simple Demo CRUD API for use in my tutorials. It contains a simple implementation of a CRUD service for products. - GitHub - Tech-With-Christian/Dotnet-CRUD-Api: This is a simple Demo CRU…</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/fluidicon.png" alt=""><span class="kg-bookmark-author">GitHub</span><span class="kg-bookmark-publisher">Tech-With-Christian</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/04e1b12c-4c30-4623-ae14-b0a40d8fc056" alt=""></div></a></figure><h2 id="an-introduction-to-masstransit">An introduction to MassTransit</h2><p>MassTransit is an open-source distributed application framework for .NET that simplifies the development of message-based applications. It provides a simple, yet powerful, way to build distributed systems using message-based architectures such as event-driven, publish/subscribe, and request/response patterns.</p><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://masstransit.io/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">MassTransit · MassTransit</div><div class="kg-bookmark-description">An open-source distributed application framework for .NET</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/favicon.ico" alt=""></div></div><div class="kg-bookmark-thumbnail"><img src="https://raw.githubusercontent.com/phatboyg/MassTransit/docus/docus/public/landing-image.png" alt=""></div></a></figure><p>With MassTransit, developers can build robust, scalable, and fault-tolerant distributed applications that can communicate across different platforms and languages. Sweet! 💪 It supports various messaging transports and protocols, including RabbitMQ, Azure Service Bus, Amazon Simple Queue Service (SQS), and <a href="https://kafka.apache.org/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">Apache Kafka</a>. You can easily switch between the platforms! 😊 </p><p>MassTransit also provides features such as message serialization, message routing, message retry policies, and message monitoring, which help developers to build highly resilient and reliable distributed systems. What's not to like here?! 😅</p><p>In summary, MassTransit is a powerful and flexible messaging framework that helps .NET developers build scalable and resilient distributed systems using a message-based architecture. Exactly what we are looking for!</p><h3 id="why-should-we-use-masstransit">Why should we use MassTransit?</h3><p>After reading the official documentation for MassTransit and having a basic knowledge of how RabbitMQ and Azure Service Bus works, it came clear to my mind that there are several reasons why you as a developer would go with a tool like MassTransit. Below are my top 5 reasons for choosing MassTransit.</p><ol><li><strong>Simplified Development </strong>- MassTransit provides a simplified programming model for building message-based applications. It takes care of low-level details like message serialization, routing, and transport, allowing you to focus on writing business logic.</li><li><strong>Language and Platform Interoperability</strong> - MassTransit supports a wide range of messaging transports and protocols, making it easy to build distributed systems that communicate across different platforms and languages. This means that you can use different programming languages and platforms of your choice, while still communicating with other systems seamlessly. Imagine having teams writing in their own preferred programming languages where each service can communicate without knowing the background implementation - That's powerful!</li><li><strong>Resilient and Fault-Tolerant</strong> - MassTransit includes features like message retries and circuit breakers, which make it easier to build highly resilient and fault-tolerant distributed systems. These features help ensure that messages are delivered reliably, even in the face of network failures and other issues.</li><li><strong>Scalability </strong>- MassTransit is designed to support distributed systems that can scale easily. It provides features like load balancing and partitioning, which make it easy to handle large volumes of messages and distribute them across multiple nodes.</li><li><strong>Open-Source and Community-Driven</strong> - MassTransit is an open-source project with an active community of contributors. This means that you can benefit from a wide range of features, bug fixes, and enhancements contributed by other members of the community.</li></ol><h2 id="a-quick-introduction-to-rabbitmq">A quick introduction to RabbitMQ</h2><p>Before we move to the part you are actually here for - the implementation, I think it's very important that you have a basic understanding of what RabbitMQ is and how queues and exchanges work.</p><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://www.rabbitmq.com/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">Messaging that just works — RabbitMQ</div><div class="kg-bookmark-description"></div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/favicon(1).ico" alt=""><span class="kg-bookmark-author">RabbitMQ</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/logo-rabbitmq.svg" alt=""></div></a></figure><p>RabbitMQ is an open-source message broker 🚌 software that provides a messaging system to send and receive messages between different applications and services. It is a robust and scalable messaging platform that is widely used in distributed systems.</p><p>RabbitMQ works by implementing the Advanced Message Queuing Protocol (<a href="https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">AMQP</a>), a standard messaging protocol for message-oriented middleware. RabbitMQ supports various messaging patterns, such as publish/subscribe, request/response, and work queues. It provides message <strong>queues</strong>, <strong>exchanges</strong>, and <strong>bindings</strong>, which enable different applications and services to exchange messages in a distributed environment.</p><p>RabbitMQ can be used with a wide range of programming languages and platforms, including Java, .NET, Python, Ruby, and many more. It is also compatible with various messaging protocols, such as AMQP, STOMP, MQTT, and HTTP. ✌️</p><h3 id="why-should-you-use-rabbitmq">Why should you use RabbitMQ?</h3><p>RabbitMQ is a reliable and scalable messaging platform for distributed systems. Below are some key takeaway features of RabbitMQ.</p><ul><li><strong>High Availability</strong> - RabbitMQ supports clustering, which allows multiple nodes to be connected and provides high availability and fault tolerance.</li><li><strong>Routing </strong>- RabbitMQ supports different routing algorithms and message exchange types, which enable messages to be routed to the correct destination.</li><li><strong>Message Durability</strong> - RabbitMQ provides message durability by persisting messages to disk, which ensures that messages are not lost even in the event of a system failure.</li><li><strong>Security </strong>- RabbitMQ provides various security features, such as SSL/TLS encryption, access control, and user authentication.</li></ul><h3 id="rabbitmq-queues">RabbitMQ Queues</h3><p>A RabbitMQ message queue is a buffer that stores messages until they can be processed by the consuming application or service. A message queue acts as a temporary storage location for messages that are produced by a producer application and consumed by one or more consumer applications.</p><p>Each message in a queue has a unique identifier and is stored in memory or on disk until it is consumed by a consumer or until it reaches its time-to-live (<a href="https://www.cloudflare.com/learning/cdn/glossary/time-to-live-ttl/?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">TTL</a>). RabbitMQ queues can be configured to support different types of message delivery, such as round-robin, priority-based, or topic-based routing.</p><p>Below is an image showing at a high level how a message queue works. You got one or more producers generating messages and publishing them to a RabbitMQ queue. One or more consumers can then consume the messages in the queue.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/Message-Queue-RabbitMQ-Tech-With-Christian.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/Message-Queue-RabbitMQ-Tech-With-Christian.webp" class="kg-image" alt="rabbitmq, message queue, rabbitmq message queue, rabbitmq messages, consumer/producer" loading="lazy" width="680" height="279" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/Message-Queue-RabbitMQ-Tech-With-Christian.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/Message-Queue-RabbitMQ-Tech-With-Christian.webp 680w"></a><figcaption>RabbitMQ Message Queue Concept</figcaption></figure><p>You can think of a queue as a large buffer that can hold all your messages with data for the consumers to handle.</p><h3 id="rabbitmq-exchanges">RabbitMQ Exchanges</h3><p>We already know what a queue is, let's go a little deeper and look at <strong>exchanges</strong>. An exchange is a component of the message broker that receives messages from producers and routes them to message queues based on specific routing rules (<em>genius btw!</em>). Exchanges are responsible for receiving messages and forwarding them to one or more queues based on the message type and routing keys.</p><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://www.rabbitmq.com/tutorials/amqp-concepts.html?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">AMQP 0-9-1 Model Explained — RabbitMQ</div><div class="kg-bookmark-description"></div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/favicon(1).ico" alt=""><span class="kg-bookmark-author">RabbitMQ</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/logo-rabbitmq.svg" alt=""></div></a></figure><p>So how does that work? Glad you asked! 😊 When a producer sends a message to RabbitMQ, it is sent to an exchange, which then routes the message to one or more message queues. The exchange determines which queue(s) the message should be sent to based on the message type and the routing key.</p><p>By default MassTransit uses Fanout as the routing algorithm, hence I will focus on that one in this tutorial. For your reference, I have included a list below of the different types of exchanges RabbitMQ supports when talking about the routing of messages.</p><ol><li><strong>Direct Exchange</strong> - Direct exchanges route messages to a queue based on the exact match between the routing key and the binding key.</li><li><strong>Fanout Exchange</strong> - Fanout exchanges route messages to all the queues that are bound to them, regardless of the routing key. (<em>this is the one we will be working with in this tutorial</em>) </li><li><strong>Topic Exchange </strong>- Topic exchanges route messages based on pattern matching between the routing key and the binding key. The routing key can contain wildcards, allowing for more flexible routing.</li><li><strong>Headers Exchange</strong> - Headers exchanges route messages based on the headers of the message, which can be any key-value pair.</li></ol><p>Below is an illustration of how the <strong>Fanout Exchange</strong> works in RabbitMQ.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/Message-Queue-RabbitMQ-Fanout-Exchange-Tech-With-Christian.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/Message-Queue-RabbitMQ-Fanout-Exchange-Tech-With-Christian.webp" class="kg-image" alt="fanout, exchange, message queue, rabbitmq, fanout exchange, producer/consumer" loading="lazy" width="820" height="325" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/Message-Queue-RabbitMQ-Fanout-Exchange-Tech-With-Christian.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/Message-Queue-RabbitMQ-Fanout-Exchange-Tech-With-Christian.webp 820w" sizes="(min-width: 720px) 720px"></a><figcaption>Fanout Exchange in RabbitMQ</figcaption></figure><p>As you can see the exchange (<em>fanout</em>) is responsible for receiving messages from producers and routing them to the appropriate message queues based on routing rules. To accomplish this we have to create a binding, to make sure that the messages go to the correct queue.</p><hr><h2 id="implementation-of-masstransit-in-net-core">Implementation of MassTransit in .NET Core</h2><p>Okay - now for the part you have been waiting for. Btw. if you have read all the introductions above, kudos! 👏 I know it was a long wall of text, but it's crucial that you have that knowledge in order to create a distributed application and understand what is going on under the hood. 🧠</p><h3 id="deploy-rabbitmq-using-docker-%F0%9F%90%8B">Deploy RabbitMQ using Docker 🐋</h3><p>The first thing we have to do is make sure that we got a running instance of RabbitMQ 🐇. For this tutorial, I will be using Docker to start up and run RabbitMQ. You can open up <code>PowerShell</code> or your <code>Terminal</code> and enter the following command below. Works on both <strong>Windows </strong>and <strong>Linux</strong>.</p><div class="code-toolbar"><pre class="language-powershell line-numbers" tabindex="0"><code class="language-powershell">docker run <span class="token operator">-</span>d <span class="token operator">--</span>hostname twc-rabbitmq-server <span class="token operator">--</span>name rabbitmq <span class="token operator">-</span>p 5672:5672 <span class="token operator">-</span>p 15672:15672 rabbitmq:3<span class="token punctuation">.</span>11-management<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>What happened when you hit ENTER?</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/pull-rabbitmq-image-from-docker.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/pull-rabbitmq-image-from-docker.webp" class="kg-image" alt="docker, pull image, pull docker image" loading="lazy" width="941" height="304" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/pull-rabbitmq-image-from-docker.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/pull-rabbitmq-image-from-docker.webp 941w" sizes="(min-width: 720px) 720px"></a><figcaption>Pull RabbitMQ Image from Docker</figcaption></figure><ul><li>We pulled the latest (<em>as of writing</em>) available management image of <a href="https://hub.docker.com/_/rabbitmq?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">RabbitMQ from Docker</a>.</li><li>The <code>hostname</code> is configured to <code>twc-rabbitmq-server</code>. You are welcome to change this to anything you like.</li><li>The name is set to <code>rabbitmq</code>.</li><li>Ports <code>5672</code> and <code>15672</code> has been published for the container and mapped to the same port on the inside. Port <code>5672</code> is the port our application will use to send/publish messages and <code>15672</code> is the administration panel we can open up in the browser.</li></ul><p>Now open up the browser and head to <code>localhost:15672</code> to see RabbitMQ. You can sign in with the default login: <code>guest/guest</code>. I will discuss this web panel later on in the article. For now, all you should see is like in the image below. (<em>click to enlarge</em>)</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbit-mq-web-management-tech-with-christian.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbit-mq-web-management-tech-with-christian.webp" class="kg-image" alt="rabbitmq, rabbitmq management" loading="lazy" width="1682" height="1186" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/rabbit-mq-web-management-tech-with-christian.webp 600w, https://blog.christian-schou.dk/content/images/size/w1000/2023/03/rabbit-mq-web-management-tech-with-christian.webp 1000w, https://blog.christian-schou.dk/content/images/size/w1600/2023/03/rabbit-mq-web-management-tech-with-christian.webp 1600w, https://blog.christian-schou.dk/content/images/2023/03/rabbit-mq-web-management-tech-with-christian.webp 1682w" sizes="(min-width: 720px) 720px"></a><figcaption>RabbitMQ Management Portal</figcaption></figure><p>If you got Docker Desktop running, you can easily check the logs if you encounter any errors.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/docker-rabbitmq-logs.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/docker-rabbitmq-logs.webp" class="kg-image" alt="rabbitmq, rabbitmq logs, docker desktop, docker logs" loading="lazy" width="1260" height="711" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/docker-rabbitmq-logs.webp 600w, https://blog.christian-schou.dk/content/images/size/w1000/2023/03/docker-rabbitmq-logs.webp 1000w, https://blog.christian-schou.dk/content/images/2023/03/docker-rabbitmq-logs.webp 1260w" sizes="(min-width: 720px) 720px"></a><figcaption>Docker Desktop RabbitMQ Logs</figcaption></figure><h3 id="prepare-the-project">Prepare the project</h3><p>I have created a new project based on my <a href="https://github.com/Tech-With-Christian/Dotnet-CRUD-Api?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">.NET CRUD API template</a>. It is a simple CRUD API for use in my <a href="https://blog.christian-schou.dk/">tutorials</a>. It contains a simple implementation of a CRUD service for products, that can easily be extended. This time we will extend it with a message service using MassTransit.</p><p>You can find the final MassTransit demo project here at the link below.</p><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://github.com/Tech-With-Christian/MassTransitDemo?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">GitHub - Tech-With-Christian/MassTransitDemo: This repository demonstrates how to implement a Message Queue service using MassTransit with RabbitMQ.</div><div class="kg-bookmark-description">This repository demonstrates how to implement a Message Queue service using MassTransit with RabbitMQ. - GitHub - Tech-With-Christian/MassTransitDemo: This repository demonstrates how to implement…</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/fluidicon.png" alt=""><span class="kg-bookmark-author">GitHub</span><span class="kg-bookmark-publisher">Tech-With-Christian</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/0e3a099a-d2bc-4204-85d3-b48bb81011e0" alt=""></div></a></figure><p>Alright - let's move on. We now got a project with clean architecture and would like to implement the message service.</p><hr><h3 id="create-a-new-messagebus-class-library">Create a new MessageBus class library</h3><p>If you plan to expand the solution with multiple projects or got other services consuming messages from the same RabbitMQ instance, it's crucial that the namespace is identical in all the projects.</p><p>First, you have to create a new folder named <code>Shared</code> in the <code>src</code> folder. Inside the <code>Shared</code> folder create a new <code>Class Library</code> project named <code>MessageBus</code>. Now create two new folders inside the <code>MessageBus</code> project named <code>Common</code> and <code>Messages</code>. You should now have a structure like the one below.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/messagebus-shared-class-library-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/messagebus-shared-class-library-twc.webp" class="kg-image" alt="Visual Studio Solution Explorer, messagebus, messages" loading="lazy" width="364" height="348"></a><figcaption>Visual Studio Solution Explorer</figcaption></figure><p>Inside the <code>Messages</code> folder create a new class named <code>IntegrationBaseEvent</code>. This class should be inherited by all event types in order to provide a consistent set of properties for the ID and Created date. Add the following code inside the class:</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">namespace</span> <span class="token namespace">MessageBus<span class="token punctuation">.</span>Messages</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">IntegrationBaseEvent</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token function">IntegrationBaseEvent</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Id <span class="token operator">=</span> Guid<span class="token punctuation">.</span><span class="token function">NewGuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            CreationDate <span class="token operator">=</span> DateTime<span class="token punctuation">.</span>Now<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token function">IntegrationBaseEvent</span><span class="token punctuation">(</span><span class="token class-name">Guid</span> id<span class="token punctuation">,</span> <span class="token class-name">DateTime</span> creationDate<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Id <span class="token operator">=</span> id<span class="token punctuation">;</span>
+            CreationDate <span class="token operator">=</span> creationDate<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token return-type class-name">Guid</span> Id <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">private</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+        <span class="token keyword">public</span> <span class="token return-type class-name">DateTime</span> CreationDate <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">private</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Inside the <code>Common</code> folder add a new class named <code>EventBusContants</code>. This is used to define constants for the name of the queues we will publish new messages to and consume from. Add the following code for now in the class.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">namespace</span> <span class="token namespace">MessageBus<span class="token punctuation">.</span>Common</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">EventBusConstants</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token keyword">const</span> <span class="token class-name"><span class="token keyword">string</span></span> ProductCreatedQueue <span class="token operator">=</span> <span class="token string">"product-created-queue"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>As you might have guessed, we will be creating a new event each time a new product is created in the API.</p><p>So why is it so important to define these classes in a shared project for the message bus? Well... When we are dealing with messages, we have to define a .NET class or interface (<em>the choice is yours</em>). MassTransit will automatically include the namespace of the event class we are using for generating the event in the message contract, hence we should use a shared library to make sure it's the same all time.</p><h3 id="add-a-new-event-class-for-when-a-product-is-created">Add a new Event Class for when a Product is Created</h3><!--members-only--><p>This class will just be a simple copy of the current product entity in the <code>Domain</code> project, but you are welcome to include more details if you would like to. Create a new folder inside the <code>Messages</code> folder named <code>Products</code> and add a new class with the name <code>ProductCreatedEvent</code>.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">namespace</span> <span class="token namespace">MessageBus<span class="token punctuation">.</span>Messages<span class="token punctuation">.</span>Products</span>
+<span class="token punctuation">{</span>
+    <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token doc-comment comment">/// Event class to hold values for a newly created product in the API</span>
+    <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ProductCreatedEvent</span> <span class="token punctuation">:</span> <span class="token type-list"><span class="token class-name">IntegrationBaseEvent</span></span>
+    <span class="token punctuation">{</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Product Name</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">string</span><span class="token punctuation">?</span></span> Name <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Product Description</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">string</span><span class="token punctuation">?</span></span> Description <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Product Price</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">double</span></span> Price <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Amount of products in stock</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">int</span></span> Stock <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>I have left out the <code>category id</code>, as I'm only interested in the core product data for this event.</p><p>So far so good, you can see the code I have added so far here: <a href="https://github.com/Tech-With-Christian/MassTransitDemo/commit/d7ed9f1f56cbbf956cfb018eb922044bec9ed6cc?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener">Add EventBus Class Library</a>.</p><h3 id="create-a-mapping-profile-to-map-between-the-event-and-product">Create a Mapping Profile to map between the event and product</h3><p>As we already have AutoMapper installed and configured in the API project with some mapping profiles already configured. I thought it was a good idea to add a mapping for our product-created event.</p><p>In the <code>API</code> project look for the <code>Mappings</code> folder and open the class named <code>ProductMappingProfile</code>. Expand the region named Create and add a new map for the event. It will look like the following.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">AutoMapper</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Domain<span class="token punctuation">.</span>Entitites<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">DTO<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MessageBus<span class="token punctuation">.</span>Messages<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">API<span class="token punctuation">.</span>Mappings<span class="token punctuation">.</span>Products</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ProductMappingProfile</span> <span class="token punctuation">:</span> <span class="token type-list"><span class="token class-name">Profile</span></span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token function">ProductMappingProfile</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token preprocessor property">#<span class="token directive keyword">region</span> </span><span class="token return-type class-name">Create</span>
+
+            <span class="token generic-method"><span class="token function">CreateMap</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>ProductCreateRequestDto<span class="token punctuation">,</span> Product<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ReverseMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token generic-method"><span class="token function">CreateMap</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>ProductCreatedEvent<span class="token punctuation">,</span> Product<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ReverseMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token preprocessor property">#<span class="token directive keyword">endregion</span> Create</span>
+
+            <span class="token range operator">..</span><span class="token punctuation">.</span>
+            
+        <span class="token punctuation">}</span>
+
+
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>This will enforce you to add a project reference from the <code>API</code> to the <code>MessageBus</code> project in order to add a <code>using</code> for the <code>ProductCreatedEvent</code> class. Go ahead and do that.</p><p>Before we move on to create a handler to publish the message, let's add the MassTransit configuration.</p><h3 id="add-settings-for-event-bus-dynamically">Add Settings for Event Bus Dynamically</h3><p>For this tutorial, I will not be implementing MassTransit in <code>Program.cs</code> as you see in many other "default" tutorials 😅. The Web API has been separated into multiple projects and this solution will hold the MassTransit service inside the <code>Infrastructure</code> project. </p><p>The settings will be loaded from a configuration file in the <code>API</code> project into the application configuration and made available through dependency injection. Let's have a look at how we can accomplish that.</p><p>The first thing you have to do is add a new file named <code>eventbus.json</code> inside the <code>Configurations</code> folder in the <code>API</code> project with the following <strong>JSON</strong> code inside.</p><div class="code-toolbar"><pre class="language-json line-numbers" tabindex="0"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"EventBusSettings"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"Host"</span><span class="token operator">:</span> <span class="token string">"localhost"</span><span class="token punctuation">,</span>
+    <span class="token property">"Post"</span><span class="token operator">:</span> <span class="token number">5672</span><span class="token punctuation">,</span>
+    <span class="token property">"UserName"</span><span class="token operator">:</span> <span class="token string">"guest"</span><span class="token punctuation">,</span>
+    <span class="token property">"Password"</span><span class="token operator">:</span> <span class="token string">"guest"</span><span class="token punctuation">,</span>
+    <span class="token property">"VirtualHost"</span><span class="token operator">:</span> <span class="token string">"/"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Now add the newly added configurations file to the <code>Startup.cs</code> class inside the <code>Configurations</code> folder to make sure that we will load the values during startup. It will look like this.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">namespace</span> <span class="token namespace">API<span class="token punctuation">.</span>Configurations</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">internal</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">ConfigureApiBuilderExtension</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token return-type class-name">ConfigureHostBuilder</span> <span class="token function">AddConfigurations</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">ConfigureHostBuilder</span> api<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            api<span class="token punctuation">.</span><span class="token function">ConfigureAppConfiguration</span><span class="token punctuation">(</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> config<span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+            <span class="token punctuation">{</span>
+                <span class="token keyword">const</span> <span class="token class-name"><span class="token keyword">string</span></span> configurationsDirectory <span class="token operator">=</span> <span class="token string">"Configurations"</span><span class="token punctuation">;</span>
+                <span class="token class-name">IHostEnvironment<span class="token punctuation">?</span></span> env <span class="token operator">=</span> context<span class="token punctuation">.</span>HostingEnvironment<span class="token punctuation">;</span>
+
+                config<span class="token punctuation">.</span><span class="token function">AddJsonFile</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"</span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">configurationsDirectory</span><span class="token punctuation">}</span></span><span class="token string">/appsettings.json"</span></span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">optional</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">reloadOnChange</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+                        <span class="token punctuation">.</span><span class="token function">AddJsonFile</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"</span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">configurationsDirectory</span><span class="token punctuation">}</span></span><span class="token string">/appsettings.</span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">env<span class="token punctuation">.</span>EnvironmentName</span><span class="token punctuation">}</span></span><span class="token string">.json"</span></span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">optional</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">reloadOnChange</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+
+                config<span class="token punctuation">.</span><span class="token function">AddJsonFile</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"</span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">configurationsDirectory</span><span class="token punctuation">}</span></span><span class="token string">/eventbus.json"</span></span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">optional</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">reloadOnChange</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+                        <span class="token punctuation">.</span><span class="token function">AddJsonFile</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"</span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">configurationsDirectory</span><span class="token punctuation">}</span></span><span class="token string">/eventbus.</span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">env<span class="token punctuation">.</span>EnvironmentName</span><span class="token punctuation">}</span></span><span class="token string">.json"</span></span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">optional</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token named-parameter punctuation">reloadOnChange</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+
+                <span class="token punctuation">.</span><span class="token function">AddEnvironmentVariables</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> api<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>To load the configuration into a settings class, we have to add a new folder inside the <code>Infrastructure</code> project named <code>Settings</code>. Inside the <code>Settings</code> folder create a new class file named <code>EventBusSettings</code>.</p><p>The <code>EventBusSettings</code> class should have the following properties defined in order to hold the values when loaded from the configuration in the service container.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">namespace</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Settings</span>
+<span class="token punctuation">{</span>
+    <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token doc-comment comment">/// Settings file for the EventBus</span>
+    <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token keyword">internal</span> <span class="token keyword">class</span> <span class="token class-name">EventBusSettings</span>
+    <span class="token punctuation">{</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Event Bus Host Address. By default set to "localhost".</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">string</span></span> Host <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token string">"localhost"</span><span class="token punctuation">;</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Event Bus Port. By default set to 5672.</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">int</span></span> Port <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token number">5672</span><span class="token punctuation">;</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Event Bus Username. By default set to "guest".</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">string</span></span> Username <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token string">"guest"</span><span class="token punctuation">;</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Event Bus Password. By default set to "guest".</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">string</span></span> Password <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token string">"guest"</span><span class="token punctuation">;</span>
+
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token doc-comment comment">/// Event Bus Virtual Host. By default set to "/".</span>
+        <span class="token doc-comment comment">/// <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>summary</span><span class="token punctuation">&gt;</span></span></span>
+        <span class="token keyword">public</span> <span class="token return-type class-name"><span class="token keyword">string</span></span> VirtualHost <span class="token punctuation">{</span> <span class="token keyword">get</span><span class="token punctuation">;</span> <span class="token keyword">set</span><span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token string">"/"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>In order to make sure that the JSON code is bound to the settings class, we have to configure it during the start-up of the application. Inside the <code>Settings</code> folder add a new class named <code>Startup</code> and add the following code inside it.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>Configuration</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>DependencyInjection</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Serilog</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Settings</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">internal</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Startup</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">internal</span> <span class="token keyword">static</span> <span class="token return-type class-name">IServiceCollection</span> <span class="token function">AddSettings</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">IServiceCollection</span> services<span class="token punctuation">,</span> <span class="token class-name">IConfiguration</span> configuration<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Log<span class="token punctuation">.</span><span class="token function">Information</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"Configuring settings for application."</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// Configure settings for the event bus</span>
+            services<span class="token punctuation">.</span><span class="token generic-method"><span class="token function">Configure</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>EventBusSettings<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span>options <span class="token operator">=&gt;</span> configuration<span class="token punctuation">.</span><span class="token function">GetSection</span><span class="token punctuation">(</span><span class="token keyword">nameof</span><span class="token punctuation">(</span>EventBusSettings<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Bind</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">return</span> services<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>This will give you an error telling you that it doesn't know about the <code>.Bind</code> method. To fix this simply install this NuGet package inside the <code>Infrastructure</code> project.</p><div class="code-toolbar"><pre class="language-text line-numbers" tabindex="0"><code class="language-text">Microsoft.Extensions.Configuration.Binder<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>In the <code>Startup.cs</code> file at the root of the <code>Infrastructure</code> project, you now have to call the <code>AddSettings()</code> method, like I have done below in line 17.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Data</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Middleware</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Services</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Settings</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>AspNetCore<span class="token punctuation">.</span>Builder</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>Configuration</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>DependencyInjection</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Serilog</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Infrastructure</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Startup</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token return-type class-name">IServiceCollection</span> <span class="token function">AddInfrastructure</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">IServiceCollection</span> services<span class="token punctuation">,</span> <span class="token class-name">IConfiguration</span> configuration<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Log<span class="token punctuation">.</span><span class="token function">Information</span><span class="token punctuation">(</span><span class="token string">"Adding Infrastructure services"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddSettings</span><span class="token punctuation">(</span>configuration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddServices</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddDatabase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> services<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token return-type class-name">IApplicationBuilder</span> <span class="token function">UseInfrastructure</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">IApplicationBuilder</span> app<span class="token punctuation">,</span> <span class="token class-name">IConfiguration</span> configuration<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Log<span class="token punctuation">.</span><span class="token function">Information</span><span class="token punctuation">(</span><span class="token string">"Using Infrastructure services"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            app<span class="token punctuation">.</span><span class="token generic-method"><span class="token function">UseMiddleware</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>ErrorHandlerMiddleware<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> app<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Awesome! Now we are ready to add the MassTransit configuration using our EventBus Settings loaded dynamically from the configuration. This makes is super easy to maintain settings for the event bus. You can even overwrite them if you package the project into a docker image. ✌️🐋</p><h3 id="configure-masstransit-service">Configure MassTransit Service</h3><p>As I mentioned earlier we will register MassTransit inside the <code>Infrastructure</code> project to keep the <code>Program.cs</code> file clean.</p><p>Look for the <code>Services</code> folder inside the <code>Infrastructure</code> project and add a new folder named <code>Events</code>. Inside this new <code>Events</code> folder add a new class named <code>Startup.cs</code>.</p><p>Before we add any code to this new class, we have to install three new packages in our <code>Infrastructure</code> project.</p><div class="code-toolbar"><pre class="language-text line-numbers" tabindex="0"><code class="language-text">Install-Package MassTransit
+Install-Package MassTransit.AspNetCore
+Install-Package MassTransit.RabbitMQ<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Okay with that out of the way, let's add some code to the Startup file for our event service.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Settings</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MassTransit</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>Configuration</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>DependencyInjection</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Serilog</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Services<span class="token punctuation">.</span>Events</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">internal</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Startup</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">internal</span> <span class="token keyword">static</span> <span class="token return-type class-name">IServiceCollection</span> <span class="token function">AddEventBusService</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">IServiceCollection</span> services<span class="token punctuation">,</span> <span class="token class-name">IConfiguration</span> configuration<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment">// Get the event bus settings from the configuration</span>
+            <span class="token class-name">EventBusSettings<span class="token punctuation">?</span></span> settings <span class="token operator">=</span> configuration<span class="token punctuation">.</span><span class="token function">GetSection</span><span class="token punctuation">(</span><span class="token keyword">nameof</span><span class="token punctuation">(</span>EventBusSettings<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token generic-method"><span class="token function">Get</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>EventBusSettings<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>settings <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span>
+            <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token constructor-invocation class-name">NullReferenceException</span><span class="token punctuation">(</span><span class="token string">"The Event Bus Settings has not been configured. Please check the settings and update them."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            Log<span class="token punctuation">.</span><span class="token function">Information</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"Registering MassTransit Service for API."</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            services<span class="token punctuation">.</span><span class="token function">AddMassTransit</span><span class="token punctuation">(</span>config <span class="token operator">=&gt;</span>
+            <span class="token punctuation">{</span>
+                config<span class="token punctuation">.</span><span class="token function">UsingRabbitMq</span><span class="token punctuation">(</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> cfg<span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+                <span class="token punctuation">{</span>
+                    cfg<span class="token punctuation">.</span><span class="token function">Host</span><span class="token punctuation">(</span>settings<span class="token punctuation">.</span>Host<span class="token punctuation">,</span> x <span class="token operator">=&gt;</span>
+                    <span class="token punctuation">{</span>
+                        x<span class="token punctuation">.</span><span class="token function">Username</span><span class="token punctuation">(</span>settings<span class="token punctuation">.</span>Username<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        x<span class="token punctuation">.</span><span class="token function">Password</span><span class="token punctuation">(</span>settings<span class="token punctuation">.</span>Password<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">return</span> services<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>What happens in the code above?</p><ul><li>First, we get the settings that we have loaded into the configuration from earlier.</li><li>Then we check if the settings are null. If yes, we throw a <code>NULL</code> exception, as we can't communicate with the message broker if we don't know where to send the messages.</li><li>Finally, we register MassTransit using the values from our settings. The MassTransit code is self-explanatory, but, we start by configuring the host and then the username and password.</li></ul><p>In the <code>Startup.cs</code> class in the root of the <code>Infrastructure</code> project, we have to register the <code>.AddEventBusService()</code> method in order for MassTransit to be added to the service container. As you can see, I have added it in line 21.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Data</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Middleware</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Services</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Services<span class="token punctuation">.</span>Events</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Settings</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>AspNetCore<span class="token punctuation">.</span>Builder</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>Configuration</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>DependencyInjection</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Serilog</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Infrastructure</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Startup</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token return-type class-name">IServiceCollection</span> <span class="token function">AddInfrastructure</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">IServiceCollection</span> services<span class="token punctuation">,</span> <span class="token class-name">IConfiguration</span> configuration<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Log<span class="token punctuation">.</span><span class="token function">Information</span><span class="token punctuation">(</span><span class="token string">"Adding Infrastructure services"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddSettings</span><span class="token punctuation">(</span>configuration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddServices</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddDatabase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            services<span class="token punctuation">.</span><span class="token function">AddEventBusService</span><span class="token punctuation">(</span>configuration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> services<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token return-type class-name">IApplicationBuilder</span> <span class="token function">UseInfrastructure</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token class-name">IApplicationBuilder</span> app<span class="token punctuation">,</span> <span class="token class-name">IConfiguration</span> configuration<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            Log<span class="token punctuation">.</span><span class="token function">Information</span><span class="token punctuation">(</span><span class="token string">"Using Infrastructure services"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            app<span class="token punctuation">.</span><span class="token generic-method"><span class="token function">UseMiddleware</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>ErrorHandlerMiddleware<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> app<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Let's verify that our API is connecting to RabbitMQ and showing up as a connection before moving on. Fire the API up! 🔥</p><p>From the Console of the API:</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/asp-net-core-api-console-with-logs-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/asp-net-core-api-console-with-logs-twc.webp" class="kg-image" alt="api, terminal, console, visual studio logs" loading="lazy" width="643" height="343" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/asp-net-core-api-console-with-logs-twc.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/asp-net-core-api-console-with-logs-twc.webp 643w"></a><figcaption>API Terminal</figcaption></figure><p>Yeehaa! MassTransit informs us that the Bus has started at <code>rabbitmq://localhost/</code> after we registered it into the service container. Let's validate that a connection has been made in the RabbitMQ Web Manager.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbit-mq-web-management-connection-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbit-mq-web-management-connection-twc.webp" class="kg-image" alt="rabbitmq, rabbitmq web management" loading="lazy" width="1118" height="826" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/rabbit-mq-web-management-connection-twc.webp 600w, https://blog.christian-schou.dk/content/images/size/w1000/2023/03/rabbit-mq-web-management-connection-twc.webp 1000w, https://blog.christian-schou.dk/content/images/2023/03/rabbit-mq-web-management-connection-twc.webp 1118w" sizes="(min-width: 720px) 720px"></a><figcaption>RabbitMQ Connections</figcaption></figure><p>Perfect! The API shows up using the username we have specified <code>guest</code>. As you can see there are yellow and blue lines in the chart. These are heartbeats between RabbitMQ and our API. The current status is <code>idle</code>... kind of boring, let's produce some messages for it.</p><h3 id="create-a-producer-using-masstransit">Create a producer using MassTransit</h3><p>Now it's time for publishing some messages to RabbitMQ. We already have the Mediator pattern implemented using MediatR, so why not extend the <code>AddProductHandler</code> with a notification that will publish the message each time a new product has been added to the application?</p><p>The first thing we have to do is install <strong>AutoMapper </strong>and <strong>MassTransit</strong> inside the <code>Application</code> project located in the <code>Core</code> folder. Next, we have to add a new project reference to the <code>MessageBus</code> project in order to use the event class for our product-created event.</p><div class="code-toolbar"><pre class="language-text line-numbers" tabindex="0"><code class="language-text">Install-Package MassTransit
+Install-Package AutoMapper<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>As we will publish the message using a notification handler using <code>MediatR</code>, we have to add a new record for our notification. Navigate to the <code>Products</code> folder at <code>src/Core/Application/Features/Products</code>. Create a new folder here named <code>Notifications</code> and add a new file named <code>ProductCreatedNotification.cs</code> inside the folder with the following code inside.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Domain<span class="token punctuation">.</span>Entitites<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MediatR</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Application<span class="token punctuation">.</span>Features<span class="token punctuation">.</span>Products<span class="token punctuation">.</span>Notifications</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">record</span> <span class="token class-name">ProductCreatedNotification</span><span class="token punctuation">(</span><span class="token class-name">Product</span> product<span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token type-list"><span class="token class-name">INotification</span></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>This is just a <code>public record</code> &nbsp;taking a <code>Product</code> entity and it inherits <code>INotification</code> from <code>MediatR</code>.</p><p>Inside the <code>Handlers/Create</code> folder under <code>Products</code>, add a new file named: <code>ProductCreatedNotificationHandler.cs</code> with the following code inside.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Application<span class="token punctuation">.</span>Features<span class="token punctuation">.</span>Products<span class="token punctuation">.</span>Notifications</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">AutoMapper</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MassTransit</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MediatR</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MessageBus<span class="token punctuation">.</span>Messages<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>Logging</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Application<span class="token punctuation">.</span>Features<span class="token punctuation">.</span>Products<span class="token punctuation">.</span>Handlers<span class="token punctuation">.</span>Create</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ProductCreatedNotificationHandler</span> <span class="token punctuation">:</span> <span class="token type-list"><span class="token class-name">INotificationHandler<span class="token punctuation">&lt;</span>ProductCreatedNotification<span class="token punctuation">&gt;</span></span></span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">IPublishEndpoint</span> _publisher<span class="token punctuation">;</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">IMapper</span> _mapper<span class="token punctuation">;</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">ILogger<span class="token punctuation">&lt;</span>ProductCreatedNotificationHandler<span class="token punctuation">&gt;</span></span> _logger<span class="token punctuation">;</span>
+
+        <span class="token keyword">public</span> <span class="token function">ProductCreatedNotificationHandler</span><span class="token punctuation">(</span>
+            <span class="token class-name">IPublishEndpoint</span> publisher<span class="token punctuation">,</span>
+            <span class="token class-name">IMapper</span> mapper<span class="token punctuation">,</span>
+            <span class="token class-name">ILogger<span class="token punctuation">&lt;</span>ProductCreatedNotificationHandler<span class="token punctuation">&gt;</span></span> logger<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            _publisher <span class="token operator">=</span> publisher<span class="token punctuation">;</span>
+            _mapper <span class="token operator">=</span> mapper<span class="token punctuation">;</span>
+            _logger <span class="token operator">=</span> logger<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token keyword">async</span> <span class="token return-type class-name">Task</span> <span class="token function">Handle</span><span class="token punctuation">(</span><span class="token class-name">ProductCreatedNotification</span> notification<span class="token punctuation">,</span> <span class="token class-name">CancellationToken</span> cancellationToken<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment">// Map product to Product Created Event</span>
+            <span class="token class-name">ProductCreatedEvent</span> productCreatedEvent <span class="token operator">=</span> _mapper<span class="token punctuation">.</span><span class="token generic-method"><span class="token function">Map</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>ProductCreatedEvent<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span>notification<span class="token punctuation">.</span>product<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// Publish the event as a new message to RabbitMQ using MassTransit</span>
+            _logger<span class="token punctuation">.</span><span class="token function">LogInformation</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"Publishing product created event to message bus service for product: </span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">notification<span class="token punctuation">.</span>product<span class="token punctuation">.</span>Name</span><span class="token punctuation">}</span></span><span class="token string">."</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">await</span> _publisher<span class="token punctuation">.</span><span class="token function">Publish</span><span class="token punctuation">(</span>productCreatedEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>What happens in the code above?</p><ul><li>First, we create a constructor with <code>IPublishEndpoint</code> (<strong>this is MassTransit</strong>), <code>IMapper</code> (<em>AutoMapper</em>) and then <code>ILogger</code>.</li><li>We then implement the interface from <code>INotificationHandler</code>. In the <code>Handler</code> we start off by mapping the product into a <code>ProductCreatedEvent</code> using <strong>AutoMapper</strong> and then we publish the mapped event to our message broker service using <strong>MassTransit</strong>.</li></ul><p>To invoke the notification handler, we have to publish a notification inside the file <code>AddProductHandler.cs</code>. Open up that file and update it to the following code:</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">Application<span class="token punctuation">.</span>Features<span class="token punctuation">.</span>Products<span class="token punctuation">.</span>Commands</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Application<span class="token punctuation">.</span>Features<span class="token punctuation">.</span>Products<span class="token punctuation">.</span>Notifications</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Application<span class="token punctuation">.</span>Services<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Domain<span class="token punctuation">.</span>Entitites<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MediatR</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Application<span class="token punctuation">.</span>Features<span class="token punctuation">.</span>Products<span class="token punctuation">.</span>Handlers<span class="token punctuation">.</span>Create</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AddProductHandler</span> <span class="token punctuation">:</span> <span class="token type-list"><span class="token class-name">IRequestHandler<span class="token punctuation">&lt;</span>AddProductCommand<span class="token punctuation">,</span> Product<span class="token punctuation">&gt;</span></span></span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">IProductService</span> _products<span class="token punctuation">;</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">IMediator</span> _mediator<span class="token punctuation">;</span>
+
+        <span class="token keyword">public</span> <span class="token function">AddProductHandler</span><span class="token punctuation">(</span><span class="token class-name">IProductService</span> products<span class="token punctuation">,</span> <span class="token class-name">IMediator</span> mediator<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            _products <span class="token operator">=</span> products<span class="token punctuation">;</span>
+            _mediator <span class="token operator">=</span> mediator<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token keyword">async</span> <span class="token return-type class-name">Task<span class="token punctuation">&lt;</span>Product<span class="token punctuation">&gt;</span></span> <span class="token function">Handle</span><span class="token punctuation">(</span><span class="token class-name">AddProductCommand</span> request<span class="token punctuation">,</span> <span class="token class-name">CancellationToken</span> cancellationToken<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token class-name">Product</span> createdProduct <span class="token operator">=</span> <span class="token keyword">await</span> _products<span class="token punctuation">.</span><span class="token function">CreateProductAsync</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>product<span class="token punctuation">,</span> cancellationToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">await</span> _mediator<span class="token punctuation">.</span><span class="token function">Publish</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token constructor-invocation class-name">ProductCreatedNotification</span><span class="token punctuation">(</span>createdProduct<span class="token punctuation">)</span><span class="token punctuation">,</span> cancellationToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">return</span> createdProduct<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>What did we do here?</p><ul><li>We added <code>IMediator</code> to the constructor, as we would like to publish a new notification.</li><li>Inside the <code>Handle</code> method we changed the implementation for a created product. Now it will create the product and hold the product in a variable. The created product data is now used when we publish a new notification for the product-created event using a mediator to activate the notification handler.</li><li>Finally, we return the created product to the requesting method.</li></ul><p>Let's test it! Spin up the API, create a new category, copy the ID of the category, and create a new product using the category ID. Example payloads below:</p><p><strong>Category</strong></p><div class="code-toolbar"><pre class="language-json line-numbers" tabindex="0"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"T-Shirts"</span><span class="token punctuation">,</span>
+  <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Category for holding all t-shirts"</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Product</p><div class="code-toolbar"><pre class="language-json line-numbers" tabindex="0"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Blue T-shirt"</span><span class="token punctuation">,</span>
+  <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"This is a basic blue t-shirt with long arms."</span><span class="token punctuation">,</span>
+  <span class="token property">"price"</span><span class="token operator">:</span> <span class="token number">6.95</span><span class="token punctuation">,</span>
+  <span class="token property">"stock"</span><span class="token operator">:</span> <span class="token number">9</span><span class="token punctuation">,</span>
+  <span class="token property">"categoryId"</span><span class="token operator">:</span> <span class="token string">"&lt;REPLACE_WITH_GENERATED_CATEGORY_ID&gt;"</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>Console Output from the API:</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/api-console-output-event-published-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/api-console-output-event-published-twc.webp" class="kg-image" alt="terminal, console, api, logs" loading="lazy" width="858" height="498" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/api-console-output-event-published-twc.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/api-console-output-event-published-twc.webp 858w" sizes="(min-width: 720px) 720px"></a><figcaption>API Terminal</figcaption></figure><p> Look good, let's see what RabbitMQ says.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbit-mq-web-management-new-message-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbit-mq-web-management-new-message-twc.webp" class="kg-image" alt="rabbitmq, publish message, masstransit, rabbitmq masstransit" loading="lazy" width="1327" height="637" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/rabbit-mq-web-management-new-message-twc.webp 600w, https://blog.christian-schou.dk/content/images/size/w1000/2023/03/rabbit-mq-web-management-new-message-twc.webp 1000w, https://blog.christian-schou.dk/content/images/2023/03/rabbit-mq-web-management-new-message-twc.webp 1327w" sizes="(min-width: 720px) 720px"></a><figcaption>RabbitMQ Web Manager with published message</figcaption></figure><p>Awesome! 🙌 MassTransit has published a new message to RabbitMQ with our product data. But it's unroutable... Let's add a <strong>consumer</strong> to fix that problem.</p><h3 id="add-consumer-using-masstransit">Add Consumer using MassTransit</h3><p>It's not fun to see messages being dropped because they are not routed correctly. Let's fix that by implementing a consumer in our <code>Infrastructure</code> project.</p><p>Inside the <code>Events</code> folder in our <code>Infrastructure</code> project, add a new folder named <code>Consumers</code>. Now add a new file named <code>ProductCreatedConsumer.cs</code> with the following code inside.</p><div class="code-toolbar"><pre class="language-csharp line-numbers" tabindex="0"><code class="language-csharp"><span class="token keyword">using</span> <span class="token namespace">AutoMapper</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Domain<span class="token punctuation">.</span>Entitites<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MassTransit</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">MessageBus<span class="token punctuation">.</span>Messages<span class="token punctuation">.</span>Products</span><span class="token punctuation">;</span>
+<span class="token keyword">using</span> <span class="token namespace">Microsoft<span class="token punctuation">.</span>Extensions<span class="token punctuation">.</span>Logging</span><span class="token punctuation">;</span>
+
+<span class="token keyword">namespace</span> <span class="token namespace">Infrastructure<span class="token punctuation">.</span>Services<span class="token punctuation">.</span>Events<span class="token punctuation">.</span>Consumers</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">internal</span> <span class="token keyword">class</span> <span class="token class-name">ProductCreatedConsumer</span> <span class="token punctuation">:</span> <span class="token type-list"><span class="token class-name">IConsumer<span class="token punctuation">&lt;</span>ProductCreatedEvent<span class="token punctuation">&gt;</span></span></span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">IMapper</span> _mapper<span class="token punctuation">;</span>
+        <span class="token keyword">private</span> <span class="token keyword">readonly</span> <span class="token class-name">ILogger<span class="token punctuation">&lt;</span>ProductCreatedConsumer<span class="token punctuation">&gt;</span></span> _logger<span class="token punctuation">;</span>
+
+        <span class="token keyword">public</span> <span class="token function">ProductCreatedConsumer</span><span class="token punctuation">(</span><span class="token class-name">IMapper</span> mapper<span class="token punctuation">,</span> <span class="token class-name">ILogger<span class="token punctuation">&lt;</span>ProductCreatedConsumer<span class="token punctuation">&gt;</span></span> logger<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            _mapper <span class="token operator">=</span> mapper<span class="token punctuation">;</span>
+            _logger <span class="token operator">=</span> logger<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">public</span> <span class="token keyword">async</span> <span class="token return-type class-name">Task</span> <span class="token function">Consume</span><span class="token punctuation">(</span><span class="token class-name">ConsumeContext<span class="token punctuation">&lt;</span>ProductCreatedEvent<span class="token punctuation">&gt;</span></span> context<span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token comment">// Map the Product Created Event to a Product by using data from the message</span>
+            <span class="token class-name">Product</span> product <span class="token operator">=</span> _mapper<span class="token punctuation">.</span><span class="token generic-method"><span class="token function">Map</span><span class="token generic class-name"><span class="token punctuation">&lt;</span>Product<span class="token punctuation">&gt;</span></span></span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>Message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// Log the details of the product</span>
+            <span class="token comment">// You could do anything here with the consumed message such as saving it to a database,</span>
+            <span class="token comment">// calling the mediator to dispatch a command, etc.</span>
+            _logger<span class="token punctuation">.</span><span class="token function">LogInformation</span><span class="token punctuation">(</span><span class="token interpolation-string"><span class="token string">$"Consumed Product Created Message. Details: Product </span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">product<span class="token punctuation">.</span>Name</span><span class="token punctuation">}</span></span><span class="token string"> has a cost of </span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">product<span class="token punctuation">.</span>Price</span><span class="token punctuation">}</span></span><span class="token string"> and we got </span><span class="token interpolation"><span class="token punctuation">{</span><span class="token expression language-csharp">product<span class="token punctuation">.</span>Stock</span><span class="token punctuation">}</span></span><span class="token string"> in stock."</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            
+            <span class="token comment">// Return a completed task, job done!</span>
+            <span class="token keyword">await</span> Task<span class="token punctuation">.</span>CompletedTask<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><div class="toolbar"><div class="toolbar-item"><button class="copy-to-clipboard-button" type="button" data-copy-state="copy"><span>Copy</span></button></div></div></div><p>What happens in the code above?</p><ul><li>We start by inheriting <code>IConsumer</code> from MassTransit.</li><li>Secondly, we create a new constructor with our <code>Mapper</code> and <code>Logger</code>. The mapper will be used to map the event message back to the <code>Product</code> entity.</li><li>In the implemented method we got from inheriting <code>IConsumer</code>, we start by mapping the <code>Message</code> data back to a <code>Product</code> entity. At this point, MassTransit has already serialized the payload from RabbitMQ for us. When then log to the console with some of the product data, but here you can do anything you would like to.</li><li>Finally, we tell the requester that the job is done by calling <code>Task.CompletedTask</code>.</li></ul><p>Let's test it out and see the results.</p><p>The first output from the console looks like this:</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/consumer-before-producing-message-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/consumer-before-producing-message-twc.webp" class="kg-image" alt="terminal" loading="lazy" width="853" height="452" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/consumer-before-producing-message-twc.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/consumer-before-producing-message-twc.webp 853w" sizes="(min-width: 720px) 720px"></a><figcaption>Terminal</figcaption></figure><p>Let's create a new category and product to see what happens in RabbitMQ.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/acknowledged-message-with-correct-routing-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/acknowledged-message-with-correct-routing-twc.webp" class="kg-image" alt="RabbitMQ Ack Message, consumed message" loading="lazy" width="1400" height="735" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/acknowledged-message-with-correct-routing-twc.webp 600w, https://blog.christian-schou.dk/content/images/size/w1000/2023/03/acknowledged-message-with-correct-routing-twc.webp 1000w, https://blog.christian-schou.dk/content/images/2023/03/acknowledged-message-with-correct-routing-twc.webp 1400w" sizes="(min-width: 720px) 720px"></a><figcaption>RabbitMQ Ack Message</figcaption></figure><p>Yay! RabbitMQ shows that the published message has been acknowledged by a consumer that is connected to the right namespace! Let's check the exchanges.</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbitmq-exchanges-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/rabbitmq-exchanges-twc.webp" class="kg-image" alt="RabbitMQ Exchanges" loading="lazy" width="1121" height="712" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/rabbitmq-exchanges-twc.webp 600w, https://blog.christian-schou.dk/content/images/size/w1000/2023/03/rabbitmq-exchanges-twc.webp 1000w, https://blog.christian-schou.dk/content/images/2023/03/rabbitmq-exchanges-twc.webp 1121w" sizes="(min-width: 720px) 720px"></a><figcaption>RabbitMQ Exchanges</figcaption></figure><p>A new queue has been created with the name constant from our <code>EventBusConstant</code> class. Is that bound to the right namespace?</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/queue-bound-to-namespace-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/queue-bound-to-namespace-twc.webp" class="kg-image" alt="exchange, rabbitmq, masstransit, product-created-queue" loading="lazy" width="834" height="680" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/queue-bound-to-namespace-twc.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/queue-bound-to-namespace-twc.webp 834w" sizes="(min-width: 720px) 720px"></a><figcaption>Exchange details for product-created-queue</figcaption></figure><p>Indeed it is! As you can see MassTransit has "told" RabbitMQ to bind the queue to the right namespace for our <code>ProductCreatedEvent</code>. Great! 💪 What about the console, did we actually consume, map and print out some product details?</p><figure class="kg-card kg-image-card kg-card-hascaption"><a data-no-swup="" data-fslightbox="" href="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/consumer-after-producing-message-twc.webp" aria-label="Click for Lightbox"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/consumer-after-producing-message-twc.webp" class="kg-image" alt="terminal, console, api logs" loading="lazy" width="854" height="607" srcset="https://blog.christian-schou.dk/content/images/size/w600/2023/03/consumer-after-producing-message-twc.webp 600w, https://blog.christian-schou.dk/content/images/2023/03/consumer-after-producing-message-twc.webp 854w" sizes="(min-width: 720px) 720px"></a><figcaption>Terminal for API</figcaption></figure><p>I'm sure you also noticed the last line in this console log. The consumer has perfectly consumed the message using MassTransit, mapped it, and printed out the values I defined using the logger and string interpolation.</p><h2 id="summary">Summary</h2><p>In this tutorial, you have learned how to implement MassTransit in .NET Core with RabbitMQ. <strong>Exchanges</strong> are one of the more advanced topics, but you are now mastering it!</p><p>You also learned how to implement new behavior for a mediator handler, using notifications. This allows us to do some post-processing tasks, while still keeping our code-base clean. It is not in scope for this tutorial and totally fine if you don't get how it works. If you would like to, you can read more on the link below.</p><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://blog.christian-schou.dk/how-to-implement-cqrs-with-mediatr-in-asp-net/"><div class="kg-bookmark-content"><div class="kg-bookmark-title">How to implement CQRS with MediatR in ASP.NET Core</div><div class="kg-bookmark-description">Learn how to implement CQRS design pattern in an ASP.NET Core Web API easily using MediatR to separate command and query logic.</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/cropped-cs-logo-color-retina.png" alt=""><span class="kg-bookmark-author">Tech with Christian</span><span class="kg-bookmark-publisher">Christian Schou</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/cqrs-mediatr-asp-net-core-web-api-1536x864.png" alt=""></div></a></figure><p>MassTransit is a very powerful distributed application framework for .NET that simplifies the development of message-based applications. It helps you to create the right bindings at the message broker service. The publishing of messages is easily done using the <code>IPublishEndpoint</code> interface.</p><p>I hope you learned something new from this (<em>pretty long </em>😅) tutorial. Distributed applications are a great choice if you are looking into converting an old monolithic solution to microservices... If you got any questions, please let me know in the comments. Until next time - Happy coding! ✌️</p><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://github.com/Tech-With-Christian/MassTransitDemo?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">GitHub - Tech-With-Christian/MassTransitDemo: This repository demonstrates how to implement a Message Queue service using MassTransit with RabbitMQ.</div><div class="kg-bookmark-description">This repository demonstrates how to implement a Message Queue service using MassTransit with RabbitMQ. - GitHub - Tech-With-Christian/MassTransitDemo: This repository demonstrates how to implement…</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/fluidicon.png" alt=""><span class="kg-bookmark-author">GitHub</span><span class="kg-bookmark-publisher">Tech-With-Christian</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/0e3a099a-d2bc-4204-85d3-b48bb81011e0" alt=""></div></a></figure><h3 id="references">References</h3><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://github.com/MassTransit/MassTransit?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">GitHub - MassTransit/MassTransit: Distributed Application Framework for .NET</div><div class="kg-bookmark-description">Distributed Application Framework for .NET. Contribute to MassTransit/MassTransit development by creating an account on GitHub.</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/fluidicon.png" alt=""><span class="kg-bookmark-author">GitHub</span><span class="kg-bookmark-publisher">MassTransit</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/d2d7da00-ef59-11e9-90ac-a4cd655371c7" alt=""></div></a></figure><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://github.com/AutoMapper/AutoMapper?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">GitHub - AutoMapper/AutoMapper: A convention-based object-object mapper in .NET.</div><div class="kg-bookmark-description">A convention-based object-object mapper in .NET. . Contribute to AutoMapper/AutoMapper development by creating an account on GitHub.</div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/fluidicon.png" alt=""><span class="kg-bookmark-author">GitHub</span><span class="kg-bookmark-publisher">AutoMapper</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/AutoMapper" alt=""></div></a></figure><figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="https://www.rabbitmq.com/documentation.html?ref=blog.christian-schou.dk" target="_blank" rel="noreferrer noopener"><div class="kg-bookmark-content"><div class="kg-bookmark-title">Documentation: Table of Contents — RabbitMQ</div><div class="kg-bookmark-description"></div><div class="kg-bookmark-metadata"><img class="kg-bookmark-icon" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/favicon(1).ico" alt=""><span class="kg-bookmark-author">RabbitMQ</span></div></div><div class="kg-bookmark-thumbnail"><img src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/logo-rabbitmq.svg" alt=""></div></a></figure>
+    </div>
+
+  </article>
+
+    <div class="post-footer content-wrap p-t-lg m-b">
+        <div class="tag-list flex flex-wrap items-center m-b-sm">
+      <a class="tag-list__item tag-net m-r-sm m-b-sm" href="https://blog.christian-schou.dk/tag/net/" aria-label=".NET" style="--color-accent: #5B2992">.NET</a>
+      <a class="tag-list__item tag-automapper m-r-sm m-b-sm" href="https://blog.christian-schou.dk/tag/automapper/" aria-label="AutoMapper" style="--color-accent: #ED1C24">AutoMapper</a>
+      <a class="tag-list__item tag-mediator m-r-sm m-b-sm" href="https://blog.christian-schou.dk/tag/mediator/" aria-label="Mediator">Mediator</a>
+      <a class="tag-list__item tag-rest m-r-sm m-b-sm" href="https://blog.christian-schou.dk/tag/rest/" aria-label="REST">REST</a>
+  </div>
+
+      <span class="flex-1"></span>
+
+      <div class="social-share m-b">
+  <span class="social-share__label fw-600 text-sm text-acc-3 m-r-sm">Share</span>
+  <a class="social-share__item twitter js-share" target="_blank" href="https://twitter.com/share?text=How%20to%20use%20MassTransit%20in%20.NET%20Core%20with%20RabbitMQ&amp;url=https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/" title="Share on Twitter" aria-label="Share on Twitter">
+    <i class="icon icon-twitter icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#twitter"></use>
+  </svg>
+</i>  </a>
+  <a class="social-share__item facebook js-share" target="_blank" href="https://www.facebook.com/sharer.php?u=https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/" title="Share on Facebook" aria-label="Share on Facebook">
+    <i class="icon icon-facebook icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#facebook"></use>
+  </svg>
+</i>  </a>
+  <a class="social-share__item linkedin js-share" target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/&amp;title=How%20to%20use%20MassTransit%20in%20.NET%20Core%20with%20RabbitMQ&amp;summary=How%20to%20use%20MassTransit%20in%20.NET%20Core%20with%20RabbitMQ" title="Share on Linkedin" aria-label="Share on Linkedin">
+    <i class="icon icon-linkedin icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#linkedin"></use>
+  </svg>
+</i>  </a>
+  <a class="social-share__item mail" href="mailto:?subject=How%20to%20use%20MassTransit%20in%20.NET%20Core%20with%20RabbitMQ&amp;body=https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/%C2%A0How%20to%20use%20MassTransit%20in%20.NET%20Core%20with%20RabbitMQ" title="Share by email" aria-label="Share by email">
+    <i class="icon icon-mail icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#mail"></use>
+  </svg>
+</i>  </a>
+  <button class="copy-link copy js-copy-link" data-url="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/" title="Copy to clipboard" data-label="Copied!" aria-label="Copy to clipboard">
+    <i class="icon icon-copy icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#copy"></use>
+  </svg>
+</i>  </button>
+</div>
+
+    </div>
+
+      <div class="content-wrap">
+        <div class="card author-card author-christian wide">
+  <figure class="author-card__cover">
+  </figure>
+
+<a class="author-card__media flex flex-cc is-round" href="https://blog.christian-schou.dk/author/christian/">      <img class="lazyload author-card__img is-round z-index-1" data-srcset="/content/images/size/w100/2023/06/christian-schou-optimized.jpeg 100w,
+            /content/images/size/w300/2023/06/christian-schou-optimized.jpeg 300w" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-sizes="auto" data-src="/content/images/size/w100/2023/06/christian-schou-optimized.jpeg" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/christian-schou-optimized(1).jpeg" alt="Christian Schou">
+</a>
+  <div class="author-card__content flex-1 flex flex-col text-acc-1">
+    <div class="author-card__name fw-700 m-b-xs">
+      <a href="https://blog.christian-schou.dk/author/christian/">Christian Schou</a>
+    </div>
+    
+    <div class="author-card__descr flex-1 text-acc-3 m-b">My name is Christian. I am a 27-year-old pragmatic DevOps engineer with a passion for .NET, Cloud, and Containers. In my spare time, I share my knowledge and love teaching other people about tech.</div>
+    
+    <div class="author-card__details flex text-acc-3">
+
+      <div class="author-card__social flex flex-cc">
+          <a href="https://www.facebook.com/christan.schou" class="" title="Facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+            <i class="icon icon-facebook icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#facebook"></use>
+  </svg>
+</i>          </a>
+          <a href="https://christian-schou.dk/" class="" title="Website" aria-label="Website" target="_blank" rel="noopener noreferrer">
+            <i class="icon icon-link icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#link"></use>
+  </svg>
+</i>          </a>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+
+       
+    <div class="bg-acc-1">
+      <div class="content-wrap">
+        <div class="comments flex flex-col flex-cc p p-t-lg" id="comments">
+          
+        <div id="ghost-comments-root"><iframe frameborder="0" title="comments-frame" style="width: 100%; height: 1561px;" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/saved_resource.html"></iframe><iframe data-frame="admin-auth" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/saved_resource(1).html" title="auth-frame" style="display: none;"></iframe></div><script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/comments-ui.min.js.download" data-ghost-comments="https://blog.christian-schou.dk/" data-api="https://blog.christian-schou.dk/ghost/api/content/" data-admin="https://blog.christian-schou.dk/ghost/" data-key="d0c7ceec837325c2faeb16664b" data-title="" data-count="false" data-post-id="6419f0d549b0a700018f6da2" data-color-scheme="auto" data-avatar-saturation="60" data-accent-color="#f05942" data-comments-enabled="all" data-publication="Tech with Christian" crossorigin="anonymous"></script>
+    
+
+
+        </div>
+      </div>
+    </div>
+
+      <div class="related-posts m-t-lg">
+      <div class="section__title m-b">You might also like</div>
+      
+      <div class="row post-feed">
+          <div class="col-xs-12 col-md-6 col-lg-4 m-b-lg">
+            <article class="post-card no-image post tag-net featured is-featured h-100 col js-post-card"> 
+
+
+  <div class="post-card__content">
+    
+    <div class="post-card__header flex items-center">
+        <a class="post-card__tag tag-net" href="https://blog.christian-schou.dk/tag/net/" aria-label=".NET" style="--color-accent: #5B2992">.NET</a>
+        
+      
+        <span class="m-l-sm m-r-sm separator-dot">•</span>
+        <span class="read-time">16 min read</span>
+
+    </div>
+
+    <h2 class="post-card__title">
+      <a href="https://blog.christian-schou.dk/simplify-api-requests-in-net-with-httpclientfactory/" aria-label="Simplify API Requests in .NET with HttpClientFactory: A Step-by-Step Guide">Simplify API Requests in .NET with HttpClientFactory: A Step-by-Step Guide</a>
+    </h2>
+
+        <div class="post-card__exc m-b">
+          Making HTTP requests to use web APIs is a common task for many software applications in the connected world of…
+        </div>
+
+    <div class="post-card__footer"> 
+<a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">              <img class="lazyload" data-sizes="auto" data-src="/content/images/size/w100/2023/06/christian-schou-optimized.jpeg" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/christian-schou-optimized(1).jpeg" alt="Christian Schou">
+</a>          <div class="post-card__info">
+            <a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">Christian Schou</a>
+            <span class="m-l-sm m-r-sm separator-dot">•</span>
+            <time datetime="2023-06-16" class="post-card__date">
+              16 Jun 2023
+            </time>
+          </div>
+    </div>
+  </div>
+
+</article>          </div>
+          <div class="col-xs-12 col-md-6 col-lg-4 m-b-lg">
+            <article class="post-card no-image post tag-net tag-csharp h-100 col js-post-card"> 
+
+
+  <div class="post-card__content">
+    
+    <div class="post-card__header flex items-center">
+        <a class="post-card__tag tag-net" href="https://blog.christian-schou.dk/tag/net/" aria-label=".NET" style="--color-accent: #5B2992">.NET</a>
+        
+      
+        <span class="m-l-sm m-r-sm separator-dot">•</span>
+        <span class="read-time">10 min read</span>
+
+        <div class="post-card__comment flex flex-cc">
+          <span class="m-l-sm m-r-sm separator-dot">•</span>
+          <i class="icon icon-comments icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#comments"></use>
+  </svg>
+</i>          <span class="m-l-xs">0</span>
+        </div>
+    </div>
+
+    <h2 class="post-card__title">
+      <a href="https://blog.christian-schou.dk/retrieve-values-from-iconfiguration/" aria-label="How to retrieve values from IConfiguration in .NET Core">How to retrieve values from IConfiguration in .NET Core</a>
+    </h2>
+
+        <div class="post-card__exc m-b">
+          In modern software development, applications are often designed to be configurable, allowing them to adapt to different environments and scenarios…
+        </div>
+
+    <div class="post-card__footer"> 
+<a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">              <img class="lazyload" data-sizes="auto" data-src="/content/images/size/w100/2023/06/christian-schou-optimized.jpeg" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/christian-schou-optimized(1).jpeg" alt="Christian Schou">
+</a>          <div class="post-card__info">
+            <a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">Christian Schou</a>
+            <span class="m-l-sm m-r-sm separator-dot">•</span>
+            <time datetime="2023-06-09" class="post-card__date">
+              09 Jun 2023
+            </time>
+          </div>
+    </div>
+  </div>
+
+</article>          </div>
+          <div class="col-xs-12 col-md-6 col-lg-4 m-b-lg">
+            <article class="post-card no-image post tag-docker tag-devops tag-net tag-api h-100 col js-post-card"> 
+
+
+  <div class="post-card__content">
+    
+    <div class="post-card__header flex items-center">
+        <a class="post-card__tag tag-docker" href="https://blog.christian-schou.dk/tag/docker/" aria-label="Docker" style="--color-accent: #2396EC">Docker</a>
+        
+      
+        <span class="m-l-sm m-r-sm separator-dot">•</span>
+        <span class="read-time">10 min read</span>
+
+        <div class="post-card__comment flex flex-cc">
+          <span class="m-l-sm m-r-sm separator-dot">•</span>
+          <i class="icon icon-comments icon--xs">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#comments"></use>
+  </svg>
+</i>          <span class="m-l-xs">0</span>
+        </div>
+    </div>
+
+    <h2 class="post-card__title">
+      <a href="https://blog.christian-schou.dk/nginx-web-server-with-docker-compose-reverse-proxy-dot-net-web-api/" aria-label="How to Set Up an Nginx Web Server with Docker Compose and Use it as a Reverse Proxy for .NET Web APIs with SSL and load balancing">How to Set Up an Nginx Web Server with Docker Compose and Use it as a Reverse Proxy for .NET Web APIs with SSL and load balancing</a>
+    </h2>
+
+        <div class="post-card__exc m-b">
+          Learn how to create an Nginx web server with Docker Compose, configure it with environment files, and use it as a reverse proxy for .NET Web APIs. Secure it with HTTPS and implement load balancing for high availability.…
+        </div>
+
+    <div class="post-card__footer"> 
+<a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">              <img class="lazyload" data-sizes="auto" data-src="/content/images/size/w100/2023/06/christian-schou-optimized.jpeg" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/christian-schou-optimized(1).jpeg" alt="Christian Schou">
+</a>          <div class="post-card__info">
+            <a class="post-card__author" href="https://blog.christian-schou.dk/author/christian/">Christian Schou</a>
+            <span class="m-l-sm m-r-sm separator-dot">•</span>
+            <time datetime="2023-05-12" class="post-card__date">
+              12 May 2023
+            </time>
+          </div>
+    </div>
+  </div>
+
+</article>          </div>
+      </div>
+    </div>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container wrapper">
+    <div class="footer__top">
+      <div class="row">
+        <div class="col-xs-12 col-md-4 footer__el">
+            <img class="footer__logo lazyload" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/logo-colorful-christian-schou-v3.webp" alt="Tech with Christian">
+
+          <div class="footer__description m-b">
+            A Pragmatic Software Developer sharing his knowledge with the internet.
+          </div>
+
+          <div class="footer__social">
+            <div class="social flex">
+  <a class="social__item facebook" href="https://www.facebook.com/christan.schou" target="_blank" title="Facebook" aria-label="Facebook" rel="noreferrer">
+    <i class="icon icon-facebook icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#facebook"></use>
+  </svg>
+</i>  </a>
+
+  <a class="social__item twitter" href="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/" target="_blank" title="Twitter" aria-label="Twitter" rel="noreferrer">
+    <i class="icon icon-twitter icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#twitter"></use>
+  </svg>
+</i>  </a>
+
+  <a class="social__item instagram" href="https://instagram.com/schou1996/" target="_blank" title="Instagram" aria-label="Instagram" rel="noreferrer">
+    <i class="icon icon-instagram icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#instagram"></use>
+  </svg>
+</i>  </a>
+
+  <a class="social__item linkedin" href="https://linkedin.com/in/chrschou1996/" target="_blank" title="Linkedin" aria-label="Linkedin" rel="noreferrer">
+    <i class="icon icon-linkedin icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#linkedin"></use>
+  </svg>
+</i>  </a>
+
+  <a class="social__item github" href="https://github.com/Christian-Schou" target="_blank" title="Github" aria-label="Github" rel="noreferrer">
+    <i class="icon icon-github icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#github"></use>
+  </svg>
+</i>  </a>
+  
+  <a class="social__item rss" href="https://blog.christian-schou.dk/rss" target="_blank" title="RSS" aria-label="RSS" rel="noreferrer">
+    <i class="icon icon-rss icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#rss"></use>
+  </svg>
+</i>  </a>
+</div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-md-4 footer__el">
+          <span class="footer__title">Navigation</span>
+          
+          <div class="row">
+            <div class="col-xs-6">
+              <ul class="nav">
+    <li class="nav-home"><a href="https://blog.christian-schou.dk/">Home 🏠</a></li>
+    <li class="nav-c"><a href="https://blog.christian-schou.dk/tag/csharp/">C# ⌨️</a></li>
+    <li class="nav-net"><a href="https://blog.christian-schou.dk/tag/net/">.NET 🌐</a></li>
+    <li class="nav-chatgpt"><a href="https://blog.christian-schou.dk/tag/chatgpt/">ChatGPT 🤖</a></li>
+    <li class="nav-docker"><a href="https://blog.christian-schou.dk/tag/docker/">Docker 🐋</a></li>
+    <li class="nav-python"><a href="https://blog.christian-schou.dk/tag/python/">Python 🐍</a></li>
+</ul>
+            </div>
+            
+            <div class="col-xs-6">
+                <ul class="nav secondary">
+    <li class="nav-account"><a href="https://blog.christian-schou.dk/how-to-use-masstransit-with-rabbitmq/#/portal/">Account</a></li>
+    <li class="nav-about"><a href="https://blog.christian-schou.dk/about/">About</a></li>
+    <li class="nav-status"><a href="https://status.christian-schou.dk/status/twc">Status</a></li>
+</ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-md-4 footer__el">
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom text-center">
+      <span>©2023&nbsp;<a href="https://blog.christian-schou.dk/">Tech with Christian</a>.</span>
+      <span>By&nbsp;<a href="https://christian-schou.dk/">Christian Schou</a>&nbsp;&amp;&nbsp;<a href="https://blog.christian-schou.dk/">TWC</a>.</span>
+    </div>
+  </div>
+</footer>
+
+    <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top" aria-label="Scroll to top">
+  <i class="icon icon-arrow-up icon--sm">
+  <svg class="icon__svg">
+    <use xlink:href="/assets/icons/icon-sprite.svg?v=12f994c93e#arrow-up"></use>
+  </svg>
+</i></button>
+
+  
+    
+
+    <div class="notifications">
+  <div class="notify notify-signup">
+    <div class="notify__msg">Great! You’ve successfully signed up.</div> 
+    <button class="notify__close js-notify-close" data-class="signup-success" aria-label="Close"></button>
+  </div>
+
+  <div class="notify notify-signin">
+    <div class="notify__msg">Welcome back! You've successfully signed in.</div> 
+    <button class="notify__close js-notify-close" data-class="signin-success" aria-label="Close"></button>
+  </div>
+
+  <div class="notify notify-subscribe">
+    <div class="notify__msg">You've successfully subscribed to Tech with Christian.</div> 
+    <button class="notify__close js-notify-close" data-class="subscribe-success" aria-label="Close"></button>
+  </div>
+
+  <div class="notify notify-expired">
+    <div class="notify__msg">Your link has expired.</div> 
+    <button class="notify__close js-notify-close" data-class="link-expired" aria-label="Close"></button>
+  </div>
+
+  <div class="notify notify-checkout">
+    <div class="notify__msg">Success! Check your email for magic link to sign-in.</div> 
+    <button class="notify__close js-notify-close" data-class="checkout-success" aria-label="Close"></button>
+  </div>
+
+  <div class="notify notify-billing-success">
+    <div class="notify__msg">Success! Your billing info has been updated.</div> 
+    <button class="notify__close js-notify-close" data-class="billing-success" aria-label="Close"></button>
+  </div>
+
+  <div class="notify notify-billing-cancel">
+    <div class="notify__msg">Your billing was not updated.</div> 
+    <button class="notify__close js-notify-close" data-class="billing-cancel" aria-label="Close"></button>
+  </div>
+</div>
+
+
+    <script>
+      if (CONFIG.ENABLE_PWA && 'serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
+
+      <script>
+    // Copy button
+    const copyBtn = document.querySelector('.js-copy-link');
+    if (copyBtn) {
+      copyBtn.onclick = function(event) {
+        copyToClipboard(event.currentTarget, event.currentTarget.getAttribute('data-url'));
+      }
+    }
+    
+    /** 
+    * Copy to clipboard
+    * @src - source element
+    * @str - string to copy
+    */ 
+    const copyToClipboard = function(src, str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      src.classList.add('has-tooltip');
+      src.setAttribute('data-label', 'Copied!');
+
+      src.onmouseleave = function() { 
+        src.classList.remove('has-tooltip');
+        setTimeout(function(){
+          src.setAttribute('data-label', '');
+        }, 500); 
+      }
+    };
+  </script>
+
+  <script>
+    const scrollTop = document.querySelector('.js-scroll-top');
+
+    if (scrollTop) {
+      const offset = 80;
+
+      window.addEventListener('scroll', function(event) {
+        //Scroll back to top
+        const scrollPos = window.scrollY || window.scrollTop || document.getElementsByTagName('html')[0].scrollTop;
+        scrollPos > offset ? scrollTop.classList.add('is-active') : scrollTop.classList.remove('is-active');
+      
+      }, false);
+    }
+  </script>
+
+  <script>
+    // Give the parameter a variable name
+    const qsParams = new URLSearchParams(window.location.search);
+    const isAction = qsParams.has('action');
+    const isStripe = qsParams.has('stripe');
+    const success = qsParams.get('success');
+    const action = qsParams.get('action');
+    const stripe = qsParams.get('stripe');
+
+    if (qsParams && isAction) {
+      if (success === "true") {
+        switch (action) {
+          case 'subscribe':
+            document.body.classList.add('subscribe-success')
+            break;
+          case 'signup': 
+            document.body.classList.add('signup-success');
+            break;
+          case 'signin':
+            document.body.classList.add('signin-success');
+            break;
+          default:
+            break;
+        }
+      } else {
+        document.body.classList.add('link-expired');
+      }
+    }
+
+    if (qsParams && isStripe) {
+      switch (stripe) {
+        case 'success':
+          document.body.classList.add('checkout-success');
+          break;
+        case 'billing-update-success':
+          document.body.classList.add('billing-success');
+          break;
+        case 'billing-update-cancel':
+          document.body.classList.add('billing-cancel');
+          break;
+        default:
+          break;
+      }
+    }
+    
+    /**
+    * Clean URI
+    */
+    function clearURI() {
+      window.history.replaceState({}, '', `${window.location.pathname}`);
+    }
+  </script>
+
+
+    <script src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/prism-v1.js.download"></script>
+<script type="text/javascript">
+	var links = document.getElementsByTagName("article")[0].querySelectorAll('a');
+    var a = new RegExp('/' + window.location.host + '/');
+	links.forEach((link) => {
+		if(!a.test(link.href)) {
+			link.setAttribute("target","_blank");
+		}
+	});
+</script>
+<script>document.body.className += ' ' + 'line-numbers';</script>
+<script defer="" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/beacon.min.js.download" data-cf-beacon="{&quot;token&quot;: &quot;0bc526f66bb647c484c12849f74bdd89&quot;}"></script>
+  
+
+<div id="ghost-portal-root"></div><div id="sodo-search-root"></div><iframe name="__privateStripeMetricsController7370" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="./How to use MassTransit in .NET Core with RabbitMQ 🔥_files/m-outer-27c67c0d52761104439bb051c7856ab1.html" aria-hidden="true" tabindex="-1" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe></body></html>
